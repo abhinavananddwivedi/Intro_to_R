@@ -26,6 +26,7 @@
 \PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
 \hypersetup{unicode=true,
             pdftitle={Introduction to ggplot},
+            pdfauthor={Abhinav Anand},
             colorlinks=true,
             linkcolor=blue,
             citecolor=magenta,
@@ -119,8 +120,9 @@
   \title{Introduction to ggplot}
   \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
-  \author{}
-  \preauthor{}\postauthor{}
+  \author{Abhinav Anand}
+  \preauthor{\centering\large\emph}
+  \postauthor{\par}
   \date{}
   \predate{}\postdate{}
 
@@ -150,18 +152,95 @@ package \texttt{ggplot2()} needs to be included.
 
 \section{Introduction to ggplot}\label{introduction-to-ggplot}
 
-\texttt{ggplot()} stands for ``grammar of graphics'' (Wilkinson 2005),
-(Wickham 2010).
-
-This idea will be further explored by the means of data from the package
+The \texttt{gg} of \texttt{ggplot} stands for (layered)
+\texttt{grammar\ of\ graphics} (Wilkinson 2005), (Wickham 2010). This
+idea will be further explored by the means of data from the package
 \texttt{gapminder()}. To install, type
-\texttt{install.packages("gapminder")}.
+\texttt{install.packages("gapminder")} in the RStudio console.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{temp_data <-}\StringTok{ }\NormalTok{gapminder}\OperatorTok{::}\NormalTok{gapminder}
+\NormalTok{data_gapminder <-}\StringTok{ }\NormalTok{gapminder}\OperatorTok{::}\NormalTok{gapminder }
 \end{Highlighting}
 \end{Shaded}
+
+\subsection{Notes}\label{notes}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Why \texttt{\textless{}-} as opposed to \texttt{=} ?
+\item
+  Why \texttt{gapminder::gapminder} ?
+\item
+  What is a dataframe?
+\end{enumerate}
+
+A data frame is a rectangular collection of variables (in the columns)
+and observations (in the rows). It's different from a `mere' matrix
+since the columns have variable names usually.
+
+\subsection{Questions?}\label{questions}
+
+\subsubsection{\texorpdfstring{Are ``Western'' countries richer than
+``Eastern''
+countries?}{Are Western countries richer than Eastern countries?}}\label{are-western-countries-richer-than-eastern-countries}
+
+The current state of Europe (in 2007):
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data_eur_}\DecValTok{2007}\NormalTok{ <-}\StringTok{ }\NormalTok{data_gapminder }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(year }\OperatorTok{==}\StringTok{ }\DecValTok{2007}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\CommentTok{#isolates variables for year 2007}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(continent }\OperatorTok{==}\StringTok{ "Europe"}\NormalTok{) }
+
+\NormalTok{plot_eur <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_eur_}\DecValTok{2007}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ gdpPercap, }\DataTypeTok{y =}\NormalTok{ country)) }
+
+\NormalTok{plot_eur}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Intro_ggplot_files/figure-latex/plot_eur-1.pdf}
+
+There is high variation---from Albania to Norway.
+
+What about Asian countries in 2007?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data_asia_}\DecValTok{2007}\NormalTok{ <-}\StringTok{ }\NormalTok{data_gapminder }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(year }\OperatorTok{==}\StringTok{ }\DecValTok{2007}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\CommentTok{#isolates variables for year 2007}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(continent }\OperatorTok{==}\StringTok{ "Asia"}\NormalTok{) }\CommentTok{#collect only Asian countries}
+
+\NormalTok{plot_asia <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_asia_}\DecValTok{2007}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ gdpPercap, }\DataTypeTok{y =}\NormalTok{ country)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"GDP/capita (USD)"}\NormalTok{, }
+       \DataTypeTok{y =} \StringTok{"Country"}\NormalTok{,}
+       \DataTypeTok{title =} \StringTok{"GDP per capita in Asia"}\NormalTok{,}
+       \DataTypeTok{subtitle =} \StringTok{"Measured in USD (2007)"}\NormalTok{)}
+
+\NormalTok{plot_asia}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Intro_ggplot_files/figure-latex/plot_asia-1.pdf}
+
+Again, large variation among Asian countries but what about the bounds?
+What can we say about the question?
+
+\subsection{Graphics}\label{graphics}
+
+We start with the function \texttt{ggplot()}. It creates a coordinate
+system that we will add layers to. The first argument is the dataset to
+use in the graph.
+
+\texttt{ggplot(data\ =\ data\_eur\_2007)} creates an empty graph. The
+function \texttt{geom\_point()} adds a layer of points to our plot. Each
+geom function in ggplot2 takes a mapping argument. This defines how
+variables in our dataset are mapped to aesthetics such as axes, colors,
+shapes etc. The \(x\) and \(y\) arguments of \texttt{aes()} specify
+which variables to map to the \(x\) and \(y\) axes.
 
 \section*{References}\label{references}
 \addcontentsline{toc}{section}{References}

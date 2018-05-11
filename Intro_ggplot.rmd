@@ -1,5 +1,6 @@
 ---
 title: "Introduction to ggplot"
+author: Abhinav Anand
 
 output: 
   pdf_document:
@@ -43,16 +44,74 @@ type `install.packages("tidyverse")`
 
 # Introduction to ggplot
 
-`ggplot()` stands for ``grammar of graphics'' [@Wilkinson:2005], [@Wickham:2010]. 
+The `gg` of `ggplot` stands for (layered) ``grammar of graphics`` [@Wilkinson:2005], [@Wickham:2010]. 
+This idea will be further explored by the means of data from the package `gapminder()`. To install, type `install.packages("gapminder")` in the RStudio console.
 
-This idea will be further explored by the means of data from the package `gapminder()`. To install, type `install.packages("gapminder")`.
+```{r data_load, eval=T, message=F, warning=T, include=T, echo=T}
 
-```{r R2, eval=T, message=F, warning=T, include=T, echo=T}
+data_gapminder <- gapminder::gapminder 
 
-temp_data <- gapminder::gapminder 
-# <- versus =
-# Why gapminder::gapminder?
 ```
+
+## Notes
+
+1. Why `<-` as opposed to `=` ?
+
+2. Why `gapminder::gapminder` ?
+
+3. What is a dataframe?
+
+A data frame is a rectangular collection of variables (in the columns) and observations (in the rows). It's different from a 'mere' matrix since the columns have variable names usually. 
+
+## Questions?
+
+### Are "Western" countries richer than "Eastern" countries?
+
+The current state of Europe (in 2007):
+
+```{r plot_eur, eval=T, echo=T, message=F, warning=T, include=T}
+
+data_eur_2007 <- data_gapminder %>% 
+  dplyr::filter(year == 2007) %>% #isolates variables for year 2007
+  dplyr::filter(continent == "Europe") 
+
+plot_eur <- ggplot(data = data_eur_2007) +
+  geom_point(mapping = aes(x = gdpPercap, y = country)) 
+
+plot_eur
+
+```
+
+There is high variation---from Albania to Norway. 
+
+What about Asian countries in 2007?
+
+```{r plot_asia, eval=T, echo=T, message=F, warning=T, include=T}
+
+data_asia_2007 <- data_gapminder %>% 
+  dplyr::filter(year == 2007) %>% #isolates variables for year 2007
+  dplyr::filter(continent == "Asia") #collect only Asian countries
+
+plot_asia <- ggplot(data = data_asia_2007) +
+  geom_point(mapping = aes(x = gdpPercap, y = country)) +
+  labs(x = "GDP/capita (USD)", 
+       y = "Country",
+       title = "GDP per capita in Asia",
+       subtitle = "Measured in USD (2007)")
+
+plot_asia
+
+```
+
+Again, large variation among Asian countries but what about the bounds? What can we say about the question?
+
+## Graphics
+
+We start with the function `ggplot()`. It creates a coordinate system that we will add layers to. The first argument is the dataset to use in the graph. 
+
+`ggplot(data = data_eur_2007)` creates an empty graph. The function `geom_point()` adds a layer of points to our plot. Each geom function in ggplot2 takes a mapping argument. This defines how variables in our dataset are mapped to aesthetics such as axes, colors, shapes etc. The $x$ and $y$ arguments of `aes()` specify which variables to map to the $x$ and $y$ axes. 
+
+
 
 
 
