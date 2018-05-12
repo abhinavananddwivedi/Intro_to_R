@@ -240,7 +240,116 @@ function \texttt{geom\_point()} adds a layer of points to our plot. Each
 geom function in ggplot2 takes a mapping argument. This defines how
 variables in our dataset are mapped to aesthetics such as axes, colors,
 shapes etc. The \(x\) and \(y\) arguments of \texttt{aes()} specify
-which variables to map to the \(x\) and \(y\) axes.
+which variables to map to the \(x\) and \(y\) axes. Variables can also
+be mapped to aesthetics such as colors, shapes, size etc.
+
+\subsubsection{A More Granular Look: China, India, France,
+Germany}\label{a-more-granular-look-china-india-france-germany}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{data_CIFU <-}\StringTok{ }\NormalTok{data_gapminder }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(country }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"China"}\NormalTok{, }\StringTok{"India"}\NormalTok{, }\StringTok{"France"}\NormalTok{, }\StringTok{"Germany"}\NormalTok{))}
+
+\NormalTok{(plot_CIFU_life_exp <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_CIFU) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ lifeExp, }\DataTypeTok{color =}\NormalTok{ country))}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Intro_ggplot_files/figure-latex/CIFU-1.pdf}
+
+\subsubsection{Notes}\label{notes-1}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Plots can be stored as variables too.
+\item
+  Other aesthetic attributes: shape, size, alpha (transparency) etc.
+\item
+  Note where to put the \texttt{+} sign.
+\item
+  \texttt{geom\_line()} as opposed to points. Other ``geoms'' are
+  \texttt{geom\_smooth}, \texttt{geom\_boxplot}, \texttt{geom\_bar} etc.
+\end{enumerate}
+
+\subsubsection{Faceting}\label{faceting}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(plot_CIFU_life_cont <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_CIFU) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ lifeExp, }\DataTypeTok{color =}\NormalTok{ country)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\StringTok{ }\NormalTok{continent)}
+\NormalTok{ )}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Intro_ggplot_files/figure-latex/CIFU_Facet-1.pdf}
+
+\subsubsection{Notes}\label{notes-2}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  To facet on one variable (`continent' here), use
+  \texttt{facet\_wrap()}.
+\item
+  To facet on two variables, use \texttt{facet\_grid()}
+\end{enumerate}
+
+\subsection{\texorpdfstring{Geoms in
+\texttt{ggplot()}}{Geoms in ggplot()}}\label{geoms-in-ggplot}
+
+REWRITE:
+
+A geom is the geometrical object that a plot uses to represent data.
+People often describe plots by the type of geom that the plot uses. For
+example, bar charts use bar geoms, line charts use line geoms, boxplots
+use boxplot geoms, and so on. Scatterplots break the trend; they use the
+point geom. As we see above, you can use different geoms to plot the
+same data.
+
+However, not every aesthetic works with every geom. You could set the
+shape of a point, but you couldn't set the ``shape'' of a line. On the
+other hand, you could set the linetype of a line. Multiple geoms could
+be part of the same graph. ggplot2 provides over 30 geoms
+
+To display multiple geoms in the same plot, add multiple geom functions
+to ggplot():
+
+ggplot(data = mpg) + geom\_point(mapping = aes(x = displ, y = hwy)) +
+geom\_smooth(mapping = aes(x = displ, y = hwy))
+
+This, however, introduces some duplication in our code. Imagine if you
+wanted to change the y-axis to display cty instead of hwy. You'd need to
+change the variable in two places, and you might forget to update one.
+You can avoid this type of repetition by passing a set of mappings to
+ggplot(). ggplot2 will treat these mappings as global mappings that
+apply to each geom in the graph. In other words, this code will produce
+the same plot as the previous code:
+
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + geom\_point() +
+geom\_smooth()
+
+\subsection{Bar Charts}\label{bar-charts}
+
+\subsection{Boxplots}\label{boxplots}
+
+\texttt{coord\_flip()}
+
+p2 \textless{}- ggplot(housing, aes(x = Home.Value)) p2 +
+geom\_histogram()
+
+\texttt{themes()}: Built-in themes include:
+
+theme\_gray() (default) theme\_bw() theme\_classc()s
+
+\subsection{The Main FAQ}\label{the-main-faq}
+
+\subsection{Wide Versus Long Data}\label{wide-versus-long-data}
 
 \section*{References}\label{references}
 \addcontentsline{toc}{section}{References}
