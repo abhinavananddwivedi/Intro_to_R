@@ -7,7 +7,7 @@ output:
     keep_tex: true
   
 documentclass: article
-geometry: margin = 1.5in
+geometry: margin = 1.75in
 
 linkcolor: blue
 urlcolor: red
@@ -75,10 +75,8 @@ data_eur_2007 <- data_gapminder %>%
   dplyr::filter(year == 2007) %>% #isolates variables for year 2007
   dplyr::filter(continent == "Europe") 
 
-plot_eur <- ggplot(data = data_eur_2007) +
-  geom_point(mapping = aes(x = gdpPercap, y = country)) 
-
-plot_eur
+(plot_eur <- ggplot(data = data_eur_2007) +
+  geom_point(mapping = aes(x = gdpPercap, y = country)))
 
 ```
 
@@ -92,14 +90,12 @@ data_asia_2007 <- data_gapminder %>%
   dplyr::filter(year == 2007) %>% #isolates variables for year 2007
   dplyr::filter(continent == "Asia") #collect only Asian countries
 
-plot_asia <- ggplot(data = data_asia_2007) +
+(plot_asia <- ggplot(data = data_asia_2007) +
   geom_point(mapping = aes(x = gdpPercap, y = country)) +
   labs(x = "GDP/capita (USD)", 
        y = "Country",
        title = "GDP per capita in Asia",
-       subtitle = "Measured in USD (2007)")
-
-plot_asia
+       subtitle = "Measured in USD (2007)"))
 
 ```
 
@@ -116,12 +112,12 @@ We start with the function `ggplot()`. It creates a coordinate system that we wi
 
 What about life expectancy in these countries with time?
 
-```{r CIFU, message=F, warning=T, eval=T, echo=T, include=T}
+```{r CIFG, message=F, warning=T, eval=T, echo=T, include=T}
 
-data_CIFU <- data_gapminder %>%
+data_CIFG <- data_gapminder %>%
   dplyr::filter(country %in% c("China", "India", "France", "Germany"))
 
-(plot_CIFU_life_exp <- ggplot(data = data_CIFU) +
+(plot_CIFG_life_exp <- ggplot(data = data_CIFG) +
   geom_line(mapping = aes(x = year, y = lifeExp, color = country))
   )
 
@@ -137,9 +133,9 @@ data_CIFU <- data_gapminder %>%
 
 ### Faceting
 
-```{r CIFU_Facet, warning=T, message=F, include=T, eval=T, echo=T}
+```{r CIFG_Facet, warning=T, message=F, include=T, eval=T, echo=T}
 
-(plot_CIFU_life_cont <- ggplot(data = data_CIFU) +
+(plot_CIFG_life_cont <- ggplot(data = data_CIFG) +
   geom_line(mapping = aes(x = year, y = lifeExp, color = country)) +
   facet_wrap(~ continent)
  )
@@ -151,37 +147,100 @@ data_CIFU <- data_gapminder %>%
 1. To facet on one variable ('continent' here), use `facet_wrap()`. 
 2. To facet on two variables, use `facet_grid()`
 
-## Geoms in `ggplot()`
+## The Notion of Geoms in `ggplot()`
 
+Sometimes one needs bar charts, sometimes histograms; at other times scatterplots or lines etc. All these are different "geoms" in `ggplot()`. Scatterplots can be made with `geom_point()`, lineplots can be implemented with `geom_line()`; boxplots require `geom_boxplot()`, barcharts need `geom_bar()` and so on. Multiple geoms could be part of the same graph. The library ggplot2 provides over 30 geoms.
 
-REWRITE:
+Each geom will need "aesthetic" parameters: for example, which datasets form the $x$ axis? Which ones form the $y$ axis? What colors to use for different variables? Somewhat unsurprisingly, not every aesthetic works with every geom. We could set the shape parameter of a point, but cannot do so for a line. 
 
-A geom is the geometrical object that a plot uses to represent data. People often describe plots by the type of geom that the plot uses. For example, bar charts use bar geoms, line charts use line geoms, boxplots use boxplot geoms, and so on. Scatterplots break the trend; they use the point geom. As we see above, you can use different geoms to plot the same data. 
+This is how we could include multiple geoms in the same plot:
 
-However, not every aesthetic works with every geom. You could set the shape of a point, but you couldn’t set the “shape” of a line. On the other hand, you could set the linetype of a line. Multiple geoms could be part of the same graph. ggplot2 provides over 30 geoms
+```{r CIFG_Mult_Geom, warning=T, message=F, include=T, echo=T, eval=T}
+(plot_CIFG_mult_geom <- ggplot(data = data_CIFG) +
+   geom_point(mapping = aes(x = year, y = lifeExp, color = country)) +
+   geom_line(mapping = aes(x = year, y = lifeExp, linetype = country))
+  )
 
-To display multiple geoms in the same plot, add multiple geom functions to ggplot():
+```
 
-ggplot(data = mpg) + 
-  geom_point(mapping = aes(x = displ, y = hwy)) +
-  geom_smooth(mapping = aes(x = displ, y = hwy))
+Note however, that we need to rewrite the code for aesthetic parameters: `x = year, y = lifeExp`. We could re-express the same idea in fewer lines---by passing some common aesthetic parameters as global options by including them in the main `ggplot` argument:
 
+```{r CIFG_Mult_Geom_2, warning=F, include=T, eval=T, echo=T, message=F}
 
-This, however, introduces some duplication in our code. Imagine if you wanted to change the y-axis to display cty instead of hwy. You’d need to change the variable in two places, and you might forget to update one. You can avoid this type of repetition by passing a set of mappings to ggplot(). ggplot2 will treat these mappings as global mappings that apply to each geom in the graph. In other words, this code will produce the same plot as the previous code:
+plot_CIFG_mult_geom_2 <- ggplot(data = data_CIFG, 
+                                mapping = aes(x = year, y = lifeExp)) +
+  geom_point(mapping =  aes(color = country)) +
+  geom_line(mapping = aes(linetype = country))
+ 
 
-ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
-  geom_point() + 
-  geom_smooth()
+```
 
+### Plotting linear trends: `geom_smooth()`
+
+Fitting a line to a set of observations is linear smoothing. Fitting a polynomial of degree 2 is quadratic smoothing and so on. When we wish to plot observations and the best linear fit computed by linear regression, we need to use `geom_smooth()` with the option `method = lm` where `lm()` stands for "linear model".
+
+### Question: What was population growth level in India?
+
+```{r CIFG_pop_Ind, include=T, echo=T, eval=T, message=F, warning=T}
+
+(plot_CIFG_pop_Ind <- ggplot(data = filter(data_CIFG, 
+                                           country == "India"), 
+                         mapping = aes(x = year, y = pop)) +
+  geom_point(mapping = aes(color = country)) +
+  geom_smooth(method = "lm", se = F) #se = "standard errors"
+ )
+
+```
+
+### Question: What about the same in China?
+
+```{r CIFG_pop_China, include=T, echo=T, eval=T, message=F, warning=T}
+
+(plot_CIFG_pop_China <- ggplot(data = filter(data_CIFG, 
+                                             country == "China"), 
+                         mapping = aes(x = year, y = pop)) +
+  geom_point(mapping = aes(color = country)) +
+  geom_smooth(method = "lm") #se = T by default
+ )
+
+```
+
+The default smoothing method however is "loess" (locally weighted scatterplot smoothing)
+
+```{r CIFG_pop_Asia_loess, include=T, echo=T, eval=T, message=F, warning=T}
+
+(plot_CIFG_pop_Ind <- ggplot(data = filter(data_CIFG, 
+                                           continent == "Asia"), 
+                         mapping = aes(x = year, y = pop)) +
+  geom_point(mapping = aes(color = country)) +
+  geom_smooth() 
+ )
+
+```
 
 ## Bar Charts
+
+What about GDP per capita of CIFG countries in 2007?
+
+```{r CIFG_pop_2007, include=T, echo=T, eval=T, message=F, warning=T}
+
+(plot_CIFG_pop_2007 <- ggplot(data = filter(data_CIFG,
+                                            year == 2007),
+                              mapping = aes(x = country, 
+                                            y = gdpPercap)) + 
+   geom_bar(mapping = aes(fill = country), #what does this mean?
+            stat = "identity") #what does this mean?
+ )
+
+```
+
+
+
 
 ## Boxplots
 
 `coord_flip()`
 
-p2 <- ggplot(housing, aes(x = Home.Value))
-p2 + geom_histogram()
 
 `themes()`: Built-in themes include:
 

@@ -21,7 +21,7 @@
 \usepackage{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage[margin = 1.5in]{geometry}
+\usepackage[margin = 1.75in]{geometry}
 \usepackage{hyperref}
 \PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
 \hypersetup{unicode=true,
@@ -178,7 +178,9 @@ idea will be further explored by the means of data from the package
 
 A data frame is a rectangular collection of variables (in the columns)
 and observations (in the rows). It's different from a `mere' matrix
-since the columns have variable names usually.
+since the columns have variable names usually and can contain columns of
+different ``types'', say numeric and categorical and character and
+logical all together.
 
 \subsection{Questions?}\label{questions}
 
@@ -194,10 +196,8 @@ The current state of Europe (in 2007):
 \StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(year }\OperatorTok{==}\StringTok{ }\DecValTok{2007}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\CommentTok{#isolates variables for year 2007}
 \StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(continent }\OperatorTok{==}\StringTok{ "Europe"}\NormalTok{) }
 
-\NormalTok{plot_eur <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_eur_}\DecValTok{2007}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ gdpPercap, }\DataTypeTok{y =}\NormalTok{ country)) }
-
-\NormalTok{plot_eur}
+\NormalTok{(plot_eur <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_eur_}\DecValTok{2007}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ gdpPercap, }\DataTypeTok{y =}\NormalTok{ country)))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -213,14 +213,12 @@ What about Asian countries in 2007?
 \StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(year }\OperatorTok{==}\StringTok{ }\DecValTok{2007}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\CommentTok{#isolates variables for year 2007}
 \StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(continent }\OperatorTok{==}\StringTok{ "Asia"}\NormalTok{) }\CommentTok{#collect only Asian countries}
 
-\NormalTok{plot_asia <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_asia_}\DecValTok{2007}\NormalTok{) }\OperatorTok{+}
+\NormalTok{(plot_asia <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_asia_}\DecValTok{2007}\NormalTok{) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ gdpPercap, }\DataTypeTok{y =}\NormalTok{ country)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"GDP/capita (USD)"}\NormalTok{, }
        \DataTypeTok{y =} \StringTok{"Country"}\NormalTok{,}
        \DataTypeTok{title =} \StringTok{"GDP per capita in Asia"}\NormalTok{,}
-       \DataTypeTok{subtitle =} \StringTok{"Measured in USD (2007)"}\NormalTok{)}
-
-\NormalTok{plot_asia}
+       \DataTypeTok{subtitle =} \StringTok{"Measured in USD (2007)"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -241,23 +239,25 @@ geom function in ggplot2 takes a mapping argument. This defines how
 variables in our dataset are mapped to aesthetics such as axes, colors,
 shapes etc. The \(x\) and \(y\) arguments of \texttt{aes()} specify
 which variables to map to the \(x\) and \(y\) axes. Variables can also
-be mapped to aesthetics such as colors, shapes, size etc.
+be mapped to aesthetics such as colors, shapes, sizes etc.
 
 \subsubsection{A More Granular Look: China, India, France,
 Germany}\label{a-more-granular-look-china-india-france-germany}
 
+What about life expectancy in these countries with time?
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{data_CIFU <-}\StringTok{ }\NormalTok{data_gapminder }\OperatorTok{%>%}
+\NormalTok{data_CIFG <-}\StringTok{ }\NormalTok{data_gapminder }\OperatorTok{%>%}
 \StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(country }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"China"}\NormalTok{, }\StringTok{"India"}\NormalTok{, }\StringTok{"France"}\NormalTok{, }\StringTok{"Germany"}\NormalTok{))}
 
-\NormalTok{(plot_CIFU_life_exp <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_CIFU) }\OperatorTok{+}
+\NormalTok{(plot_CIFG_life_exp <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_CIFG) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ lifeExp, }\DataTypeTok{color =}\NormalTok{ country))}
 \NormalTok{  )}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Intro_ggplot_files/figure-latex/CIFU-1.pdf}
+\includegraphics{Intro_ggplot_files/figure-latex/CIFG-1.pdf}
 
 \subsubsection{Notes}\label{notes-1}
 
@@ -279,14 +279,14 @@ Germany}\label{a-more-granular-look-china-india-france-germany}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{(plot_CIFU_life_cont <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_CIFU) }\OperatorTok{+}
+\NormalTok{(plot_CIFG_life_cont <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_CIFG) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ lifeExp, }\DataTypeTok{color =}\NormalTok{ country)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\StringTok{ }\NormalTok{continent)}
 \NormalTok{ )}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Intro_ggplot_files/figure-latex/CIFU_Facet-1.pdf}
+\includegraphics{Intro_ggplot_files/figure-latex/CIFG_Facet-1.pdf}
 
 \subsubsection{Notes}\label{notes-2}
 
@@ -300,48 +300,128 @@ Germany}\label{a-more-granular-look-china-india-france-germany}
   To facet on two variables, use \texttt{facet\_grid()}
 \end{enumerate}
 
-\subsection{\texorpdfstring{Geoms in
-\texttt{ggplot()}}{Geoms in ggplot()}}\label{geoms-in-ggplot}
+\subsection{\texorpdfstring{The Notion of Geoms in
+\texttt{ggplot()}}{The Notion of Geoms in ggplot()}}\label{the-notion-of-geoms-in-ggplot}
 
-REWRITE:
+Sometimes one needs bar charts, sometimes histograms; at other times
+scatterplots or lines etc. All these are different ``geoms'' in
+\texttt{ggplot()}. Scatterplots can be made with \texttt{geom\_point()},
+lineplots can be implemented with \texttt{geom\_line()}; boxplots
+require \texttt{geom\_boxplot()}, barcharts need \texttt{geom\_bar()}
+and so on. Multiple geoms could be part of the same graph. The library
+ggplot2 provides over 30 geoms.
 
-A geom is the geometrical object that a plot uses to represent data.
-People often describe plots by the type of geom that the plot uses. For
-example, bar charts use bar geoms, line charts use line geoms, boxplots
-use boxplot geoms, and so on. Scatterplots break the trend; they use the
-point geom. As we see above, you can use different geoms to plot the
-same data.
+Each geom will need ``aesthetic'' parameters: for example, which
+datasets form the \(x\) axis? Which ones form the \(y\) axis? What
+colors to use for different variables? Somewhat unsurprisingly, not
+every aesthetic works with every geom. We could set the shape parameter
+of a point, but cannot do so for a line.
 
-However, not every aesthetic works with every geom. You could set the
-shape of a point, but you couldn't set the ``shape'' of a line. On the
-other hand, you could set the linetype of a line. Multiple geoms could
-be part of the same graph. ggplot2 provides over 30 geoms
+This is how we could include multiple geoms in the same plot:
 
-To display multiple geoms in the same plot, add multiple geom functions
-to ggplot():
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(plot_CIFG_mult_geom <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_CIFG) }\OperatorTok{+}
+\StringTok{   }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ lifeExp, }\DataTypeTok{color =}\NormalTok{ country)) }\OperatorTok{+}
+\StringTok{   }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ lifeExp, }\DataTypeTok{linetype =}\NormalTok{ country))}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
 
-ggplot(data = mpg) + geom\_point(mapping = aes(x = displ, y = hwy)) +
-geom\_smooth(mapping = aes(x = displ, y = hwy))
+\includegraphics{Intro_ggplot_files/figure-latex/CIFG_Mult_Geom-1.pdf}
 
-This, however, introduces some duplication in our code. Imagine if you
-wanted to change the y-axis to display cty instead of hwy. You'd need to
-change the variable in two places, and you might forget to update one.
-You can avoid this type of repetition by passing a set of mappings to
-ggplot(). ggplot2 will treat these mappings as global mappings that
-apply to each geom in the graph. In other words, this code will produce
-the same plot as the previous code:
+Note however, that we need to rewrite the code for aesthetic parameters:
+\texttt{x\ =\ year,\ y\ =\ lifeExp}. We could re-express the same idea
+in fewer lines---by passing some common aesthetic parameters as global
+options by including them in the main \texttt{ggplot} argument:
 
-ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + geom\_point() +
-geom\_smooth()
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_CIFG_mult_geom_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_CIFG, }
+                                \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ lifeExp)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =}  \KeywordTok{aes}\NormalTok{(}\DataTypeTok{color =}\NormalTok{ country)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{linetype =}\NormalTok{ country))}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{\texorpdfstring{Plotting linear trends:
+\texttt{geom\_smooth()}}{Plotting linear trends: geom\_smooth()}}\label{plotting-linear-trends-geom_smooth}
+
+Fitting a line to a set of observations is linear smoothing. Fitting a
+polynomial of degree 2 is quadratic smoothing and so on. When we wish to
+plot observations and the best linear fit computed by linear regression,
+we need to use \texttt{geom\_smooth()} with the option
+\texttt{method\ =\ lm} where \texttt{lm()} stands for ``linear model''.
+
+\subsubsection{Question: What was population growth level in
+India?}\label{question-what-was-population-growth-level-in-india}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(plot_CIFG_pop_Ind <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =} \KeywordTok{filter}\NormalTok{(data_CIFG, }
+\NormalTok{                                           country }\OperatorTok{==}\StringTok{ "India"}\NormalTok{), }
+                         \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ pop)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{color =}\NormalTok{ country)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method =} \StringTok{"lm"}\NormalTok{, }\DataTypeTok{se =}\NormalTok{ F) }\CommentTok{#se = "standard errors"}
+\NormalTok{ )}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Intro_ggplot_files/figure-latex/CIFG_pop_Ind-1.pdf}
+
+\subsubsection{Question: What about the same in
+China?}\label{question-what-about-the-same-in-china}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(plot_CIFG_pop_China <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =} \KeywordTok{filter}\NormalTok{(data_CIFG, }
+\NormalTok{                                             country }\OperatorTok{==}\StringTok{ "China"}\NormalTok{), }
+                         \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ pop)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{color =}\NormalTok{ country)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method =} \StringTok{"lm"}\NormalTok{) }\CommentTok{#se = T by default}
+\NormalTok{ )}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Intro_ggplot_files/figure-latex/CIFG_pop_China-1.pdf}
+
+The default smoothing method however is ``loess'' (locally weighted
+scatterplot smoothing)
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(plot_CIFG_pop_Ind <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =} \KeywordTok{filter}\NormalTok{(data_CIFG, }
+\NormalTok{                                           continent }\OperatorTok{==}\StringTok{ "Asia"}\NormalTok{), }
+                         \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ pop)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{color =}\NormalTok{ country)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{() }
+\NormalTok{ )}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Intro_ggplot_files/figure-latex/CIFG_pop_Asia_loess-1.pdf}
 
 \subsection{Bar Charts}\label{bar-charts}
+
+What about GDP per capita of CIFG countries in 2007?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(plot_CIFG_pop_}\DecValTok{2007}\NormalTok{ <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =} \KeywordTok{filter}\NormalTok{(data_CIFG,}
+\NormalTok{                                            year }\OperatorTok{==}\StringTok{ }\DecValTok{2007}\NormalTok{),}
+                              \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ country, }
+                                            \DataTypeTok{y =}\NormalTok{ gdpPercap)) }\OperatorTok{+}\StringTok{ }
+\StringTok{   }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{fill =}\NormalTok{ country), }\CommentTok{#what does this mean?}
+            \DataTypeTok{stat =} \StringTok{"identity"}\NormalTok{) }\CommentTok{#what does this mean?}
+\NormalTok{ )}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Intro_ggplot_files/figure-latex/CIFG_pop_2007-1.pdf}
 
 \subsection{Boxplots}\label{boxplots}
 
 \texttt{coord\_flip()}
-
-p2 \textless{}- ggplot(housing, aes(x = Home.Value)) p2 +
-geom\_histogram()
 
 \texttt{themes()}: Built-in themes include:
 
