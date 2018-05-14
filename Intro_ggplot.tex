@@ -152,11 +152,11 @@ package \texttt{ggplot2()} needs to be included.
 
 \section{Introduction to ggplot}\label{introduction-to-ggplot}
 
-The \texttt{gg} of \texttt{ggplot} stands for (layered)
-\texttt{grammar\ of\ graphics} (Wilkinson 2005), (Wickham 2010). This
-idea will be further explored by the means of data from the package
-\texttt{gapminder()}. To install, type
-\texttt{install.packages("gapminder")} in the RStudio console.
+The \texttt{gg} of \texttt{ggplot} stands for (layered) ``grammar of
+graphics'' (Wilkinson 2005), (Wickham 2010). This idea will be further
+explored by the means of data from the package \texttt{gapminder()}. To
+install, type \texttt{install.packages("gapminder")} in the RStudio
+console.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -178,11 +178,11 @@ idea will be further explored by the means of data from the package
 
 A data frame is a rectangular collection of variables (in the columns)
 and observations (in the rows). It's different from a `mere' matrix
-since the columns have variable names usually and can contain columns of
-different ``types'', say numeric and categorical and character and
-logical all together.
+since the columns have variable names usually and can contain different
+``types'', say numeric and categorical and character and logical all
+together.
 
-\subsection{Questions?}\label{questions}
+\subsection{Questions}\label{questions}
 
 \subsubsection{\texorpdfstring{Are ``Western'' countries richer than
 ``Eastern''
@@ -313,9 +313,10 @@ ggplot2 provides over 30 geoms.
 
 Each geom will need ``aesthetic'' parameters: for example, which
 datasets form the \(x\) axis? Which ones form the \(y\) axis? What
-colors to use for different variables? Somewhat unsurprisingly, not
-every aesthetic works with every geom. We could set the shape parameter
-of a point, but cannot do so for a line.
+colors to use for different variables?
+
+Somewhat unsurprisingly, not every aesthetic works with every geom. We
+could set the shape parameter of a point, but cannot do so for a line.
 
 This is how we could include multiple geoms in the same plot:
 
@@ -333,12 +334,13 @@ This is how we could include multiple geoms in the same plot:
 Note however, that we need to rewrite the code for aesthetic parameters:
 \texttt{x\ =\ year,\ y\ =\ lifeExp}. We could re-express the same idea
 in fewer lines---by passing some common aesthetic parameters as global
-options by including them in the main \texttt{ggplot} argument:
+options---by including them in the main \texttt{ggplot} argument:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{plot_CIFG_mult_geom_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_CIFG, }
-                                \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ lifeExp)) }\OperatorTok{+}
+                                \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }
+                                              \DataTypeTok{y =}\NormalTok{ lifeExp)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =}  \KeywordTok{aes}\NormalTok{(}\DataTypeTok{color =}\NormalTok{ country)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{linetype =}\NormalTok{ country))}
 \end{Highlighting}
@@ -351,14 +353,15 @@ Fitting a line to a set of observations is linear smoothing. Fitting a
 polynomial of degree 2 is quadratic smoothing and so on. When we wish to
 plot observations and the best linear fit computed by linear regression,
 we need to use \texttt{geom\_smooth()} with the option
-\texttt{method\ =\ lm} where \texttt{lm()} stands for ``linear model''.
+\texttt{method\ =\ "lm"} where \texttt{lm()} stands for ``linear
+model''.
 
-\subsubsection{Question: What was population growth level in
-India?}\label{question-what-was-population-growth-level-in-india}
+\subsubsection{Question: What was population growth in
+India?}\label{question-what-was-population-growth-in-india}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{(plot_CIFG_pop_Ind <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =} \KeywordTok{filter}\NormalTok{(data_CIFG, }
+\NormalTok{(plot_CIFG_pop_Ind <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =} \KeywordTok{filter}\NormalTok{(data_CIFG, }\CommentTok{#why no +?}
 \NormalTok{                                           country }\OperatorTok{==}\StringTok{ "India"}\NormalTok{), }
                          \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ pop)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{color =}\NormalTok{ country)) }\OperatorTok{+}
@@ -418,16 +421,132 @@ What about GDP per capita of CIFG countries in 2007?
 \end{Shaded}
 
 \includegraphics{Intro_ggplot_files/figure-latex/CIFG_pop_2007-1.pdf}
+REWRITE:
+
+Some plot types (such as scatterplots) do not require
+transformations--each point is plotted at x and y coordinates equal to
+the original value. Other plots, such as boxplots, histograms,
+prediction lines etc. require statistical transformations:
+
+for a boxplot the y values must be transformed to the median and
+1.5(IQR)
+
+Each geom has a default statistic, but these can be changed. For
+example, the default statistic for geom\_bar is stat\_bin:
 
 \subsection{Boxplots}\label{boxplots}
 
-\texttt{coord\_flip()}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(plot_CIFG_box <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_CIFG,}
+                         \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }
+                                       \DataTypeTok{y =}\NormalTok{ lifeExp,}
+                                       \DataTypeTok{color =}\NormalTok{ country)) }\OperatorTok{+}
+\StringTok{   }\KeywordTok{geom_boxplot}\NormalTok{()}
+\NormalTok{   )}
+\end{Highlighting}
+\end{Shaded}
 
-\texttt{themes()}: Built-in themes include:
+\includegraphics{Intro_ggplot_files/figure-latex/plot_CIFG_box-1.pdf}
 
-theme\_gray() (default) theme\_bw() theme\_classc()s
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(plot_eur_box_flip <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =} \KeywordTok{filter}\NormalTok{(data_gapminder,}
+\NormalTok{                                           continent }\OperatorTok{==}\StringTok{ "Europe"}\NormalTok{),}
+                         \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }
+                                       \DataTypeTok{y =}\NormalTok{ lifeExp,}
+                                       \DataTypeTok{color =}\NormalTok{ country)) }\OperatorTok{+}
+\StringTok{   }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
+\StringTok{   }\KeywordTok{coord_flip}\NormalTok{()}
+\NormalTok{   )}
+\end{Highlighting}
+\end{Shaded}
 
-\subsection{The Main FAQ}\label{the-main-faq}
+\includegraphics{Intro_ggplot_files/figure-latex/plot_eur_box_flip-1.pdf}
+
+\subsection{Themes}\label{themes}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(plot_CIFG_theme <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_CIFG, }
+                                \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }
+                                              \DataTypeTok{y =}\NormalTok{ lifeExp)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =}  \KeywordTok{aes}\NormalTok{(}\DataTypeTok{color =}\NormalTok{ country)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{linetype =}\NormalTok{ country)) }\OperatorTok{+}
+\StringTok{   }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Years"}\NormalTok{, }
+        \DataTypeTok{y =} \StringTok{"Life Expectancy"}\NormalTok{,}
+        \DataTypeTok{title =} \StringTok{"Illustration of Different Themes"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_classic}\NormalTok{() }\CommentTok{#note the classic theme}
+\NormalTok{ )}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Intro_ggplot_files/figure-latex/CIFG_theme-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(plot_CIFG_theme <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_CIFG, }
+                                \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }
+                                              \DataTypeTok{y =}\NormalTok{ lifeExp)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =}  \KeywordTok{aes}\NormalTok{(}\DataTypeTok{color =}\NormalTok{ country)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{linetype =}\NormalTok{ country)) }\OperatorTok{+}
+\StringTok{   }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Years"}\NormalTok{, }
+        \DataTypeTok{y =} \StringTok{"Life Expectancy"}\NormalTok{,}
+        \DataTypeTok{title =} \StringTok{"Illustration of Different Themes"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_bw}\NormalTok{() }\CommentTok{#note the bw theme (black and white)}
+\NormalTok{ )}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Intro_ggplot_files/figure-latex/CIFG_theme-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(plot_CIFG_theme <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_CIFG, }
+                                \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }
+                                              \DataTypeTok{y =}\NormalTok{ lifeExp)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =}  \KeywordTok{aes}\NormalTok{(}\DataTypeTok{color =}\NormalTok{ country)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{linetype =}\NormalTok{ country)) }\OperatorTok{+}
+\StringTok{   }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Years"}\NormalTok{, }
+        \DataTypeTok{y =} \StringTok{"Life Expectancy"}\NormalTok{,}
+        \DataTypeTok{caption =} \StringTok{"Insert caption here"}\NormalTok{,}
+        \DataTypeTok{title =} \StringTok{"Illustration of Different Themes"}\NormalTok{) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{theme_minimal}\NormalTok{() }\CommentTok{#note the minimal theme}
+\NormalTok{ )}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Intro_ggplot_files/figure-latex/CIFG_theme-3.pdf}
+
+\section{The Main FAQs}\label{the-main-faqs}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  plotting multiple variables in one frame
+\end{enumerate}
+
+Map Aesthetic To Different Columns The most frequently asked question
+goes something like this: I have two variables in my data.frame, and I'd
+like to plot them as separate points, with different color depending on
+which variable it is. How do I do that?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{temp <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\DecValTok{1991}\OperatorTok{:}\DecValTok{2010}\NormalTok{, }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{20}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{), }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{20}\NormalTok{, }\OperatorTok{-}\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{)) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{tibble}\OperatorTok{::}\KeywordTok{as_tibble}\NormalTok{()}
+\KeywordTok{names}\NormalTok{(temp) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"year"}\NormalTok{, }\StringTok{"N01"}\NormalTok{, }\StringTok{"N25"}\NormalTok{)}
+
+\NormalTok{(}\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ temp,}
+        \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ N01), }\DataTypeTok{color =} \StringTok{"red"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ N25), }\DataTypeTok{color =} \StringTok{"blue"}\NormalTok{)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Intro_ggplot_files/figure-latex/wide_vs_long-1.pdf}
 
 \subsection{Wide Versus Long Data}\label{wide-versus-long-data}
 

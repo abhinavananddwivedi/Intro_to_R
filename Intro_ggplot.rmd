@@ -44,7 +44,7 @@ type `install.packages("tidyverse")`
 
 # Introduction to ggplot
 
-The `gg` of `ggplot` stands for (layered) ``grammar of graphics`` [@Wilkinson:2005], [@Wickham:2010]. 
+The `gg` of `ggplot` stands for (layered) "grammar of graphics" [@Wilkinson:2005], [@Wickham:2010]. 
 This idea will be further explored by the means of data from the package `gapminder()`. To install, type `install.packages("gapminder")` in the RStudio console.
 
 ```{r data_load, eval=T, message=F, warning=T, include=T, echo=T}
@@ -61,9 +61,9 @@ data_gapminder <- gapminder::gapminder
 
 3. What is a dataframe?
 
-A data frame is a rectangular collection of variables (in the columns) and observations (in the rows). It's different from a 'mere' matrix since the columns have variable names usually and can contain columns of different "types", say numeric and categorical and character and logical all together. 
+A data frame is a rectangular collection of variables (in the columns) and observations (in the rows). It's different from a 'mere' matrix since the columns have variable names usually and can contain different "types", say numeric and categorical and character and logical all together. 
 
-## Questions?
+## Questions
 
 ### Are "Western" countries richer than "Eastern" countries?
 
@@ -151,7 +151,9 @@ data_CIFG <- data_gapminder %>%
 
 Sometimes one needs bar charts, sometimes histograms; at other times scatterplots or lines etc. All these are different "geoms" in `ggplot()`. Scatterplots can be made with `geom_point()`, lineplots can be implemented with `geom_line()`; boxplots require `geom_boxplot()`, barcharts need `geom_bar()` and so on. Multiple geoms could be part of the same graph. The library ggplot2 provides over 30 geoms.
 
-Each geom will need "aesthetic" parameters: for example, which datasets form the $x$ axis? Which ones form the $y$ axis? What colors to use for different variables? Somewhat unsurprisingly, not every aesthetic works with every geom. We could set the shape parameter of a point, but cannot do so for a line. 
+Each geom will need "aesthetic" parameters: for example, which datasets form the $x$ axis? Which ones form the $y$ axis? What colors to use for different variables? 
+
+Somewhat unsurprisingly, not every aesthetic works with every geom. We could set the shape parameter of a point, but cannot do so for a line. 
 
 This is how we could include multiple geoms in the same plot:
 
@@ -163,12 +165,13 @@ This is how we could include multiple geoms in the same plot:
 
 ```
 
-Note however, that we need to rewrite the code for aesthetic parameters: `x = year, y = lifeExp`. We could re-express the same idea in fewer lines---by passing some common aesthetic parameters as global options by including them in the main `ggplot` argument:
+Note however, that we need to rewrite the code for aesthetic parameters: `x = year, y = lifeExp`. We could re-express the same idea in fewer lines---by passing some common aesthetic parameters as global options---by including them in the main `ggplot` argument:
 
 ```{r CIFG_Mult_Geom_2, warning=F, include=T, eval=T, echo=T, message=F}
 
 plot_CIFG_mult_geom_2 <- ggplot(data = data_CIFG, 
-                                mapping = aes(x = year, y = lifeExp)) +
+                                mapping = aes(x = year, 
+                                              y = lifeExp)) +
   geom_point(mapping =  aes(color = country)) +
   geom_line(mapping = aes(linetype = country))
  
@@ -177,13 +180,13 @@ plot_CIFG_mult_geom_2 <- ggplot(data = data_CIFG,
 
 ### Plotting linear trends: `geom_smooth()`
 
-Fitting a line to a set of observations is linear smoothing. Fitting a polynomial of degree 2 is quadratic smoothing and so on. When we wish to plot observations and the best linear fit computed by linear regression, we need to use `geom_smooth()` with the option `method = lm` where `lm()` stands for "linear model".
+Fitting a line to a set of observations is linear smoothing. Fitting a polynomial of degree 2 is quadratic smoothing and so on. When we wish to plot observations and the best linear fit computed by linear regression, we need to use `geom_smooth()` with the option `method = "lm"` where `lm()` stands for "linear model".
 
-### Question: What was population growth level in India?
+### Question: What was population growth in India?
 
 ```{r CIFG_pop_Ind, include=T, echo=T, eval=T, message=F, warning=T}
 
-(plot_CIFG_pop_Ind <- ggplot(data = filter(data_CIFG, 
+(plot_CIFG_pop_Ind <- ggplot(data = filter(data_CIFG, #why no +?
                                            country == "India"), 
                          mapping = aes(x = year, y = pop)) +
   geom_point(mapping = aes(color = country)) +
@@ -233,22 +236,103 @@ What about GDP per capita of CIFG countries in 2007?
  )
 
 ```
+REWRITE:
 
+Some plot types (such as scatterplots) do not require transformations–each point is plotted at x and y coordinates equal to the original value. Other plots, such as boxplots, histograms, prediction lines etc. require statistical transformations:
 
+for a boxplot the y values must be transformed to the median and 1.5(IQR)
 
+Each geom has a default statistic, but these can be changed. For example, the default statistic for geom_bar is stat_bin:
 
 ## Boxplots
 
-`coord_flip()`
+```{r plot_CIFG_box, include=T, echo=T, eval=T, message=F, warning=T}
+
+(plot_CIFG_box <- ggplot(data = data_CIFG,
+                         mapping = aes(x = year, 
+                                       y = lifeExp,
+                                       color = country)) +
+   geom_boxplot()
+   )
+
+```
 
 
-`themes()`: Built-in themes include:
+```{r plot_eur_box_flip, include=T, echo=T, eval=T, message=F, warning=T}
 
-theme_gray() (default)
-theme_bw()
-theme_classc()s
+(plot_eur_box_flip <- ggplot(data = filter(data_gapminder,
+                                           continent == "Europe"),
+                         mapping = aes(x = year, 
+                                       y = lifeExp,
+                                       color = country)) +
+   geom_boxplot() +
+   coord_flip()
+   )
 
-## The Main FAQ
+```
+
+## Themes
+
+```{r CIFG_theme, warning=F, include=T, eval=T, echo=T, message=F}
+
+(plot_CIFG_theme <- ggplot(data = data_CIFG, 
+                                mapping = aes(x = year, 
+                                              y = lifeExp)) +
+  geom_point(mapping =  aes(color = country)) +
+  geom_line(mapping = aes(linetype = country)) +
+   labs(x = "Years", 
+        y = "Life Expectancy",
+        title = "Illustration of Different Themes") +
+  theme_classic() #note the classic theme
+ )
+ 
+(plot_CIFG_theme <- ggplot(data = data_CIFG, 
+                                mapping = aes(x = year, 
+                                              y = lifeExp)) +
+  geom_point(mapping =  aes(color = country)) +
+  geom_line(mapping = aes(linetype = country)) +
+   labs(x = "Years", 
+        y = "Life Expectancy",
+        title = "Illustration of Different Themes") +
+  theme_bw() #note the bw theme (black and white)
+ )
+
+(plot_CIFG_theme <- ggplot(data = data_CIFG, 
+                                mapping = aes(x = year, 
+                                              y = lifeExp)) +
+  geom_point(mapping =  aes(color = country)) +
+  geom_line(mapping = aes(linetype = country)) +
+   labs(x = "Years", 
+        y = "Life Expectancy",
+        caption = "Insert caption here",
+        title = "Illustration of Different Themes") +
+  theme_minimal() #note the minimal theme
+ )
+
+```
+
+
+
+# The Main FAQs
+
+1. plotting multiple variables in one frame
+
+Map Aesthetic To Different Columns
+The most frequently asked question goes something like this: I have two variables in my data.frame, and I’d like to plot them as separate points, with different color depending on which variable it is. How do I do that?
+
+```{r wide_vs_long, warning=F, include=T, eval=T, echo=T, message=F}
+
+temp <- cbind(1991:2010, rnorm(20, 0, 1), rnorm(20, -1, 5)) %>%
+  tibble::as_tibble()
+names(temp) <- c("year", "N01", "N25")
+
+(ggplot(data = temp,
+        mapping = aes(x = year)) + 
+    geom_line(mapping = aes(y = N01), color = "red") +
+    geom_line(mapping = aes(y = N25), color = "blue")
+  )
+
+```
 
 ## Wide Versus Long Data
 
