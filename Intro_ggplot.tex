@@ -25,7 +25,7 @@
 \usepackage{hyperref}
 \PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
 \hypersetup{unicode=true,
-            pdftitle={Introduction to ggplot},
+            pdftitle={Introduction to ggplot()},
             pdfauthor={Abhinav Anand},
             colorlinks=true,
             linkcolor=blue,
@@ -117,7 +117,7 @@
 }
 
 \setlength{\droptitle}{-2em}
-  \title{Introduction to ggplot}
+  \title{Introduction to \texttt{ggplot()}}
   \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
   \author{Abhinav Anand}
@@ -179,8 +179,7 @@ console.
 A data frame is a rectangular collection of variables (in the columns)
 and observations (in the rows). It's different from a `mere' matrix
 since the columns have variable names usually and can contain different
-``types'', say numeric and categorical and character and logical all
-together.
+``types'', say numeric, categorical, character and logical all together.
 
 \subsection{Questions}\label{questions}
 
@@ -188,7 +187,7 @@ together.
 ``Eastern''
 countries?}{Are Western countries richer than Eastern countries?}}\label{are-western-countries-richer-than-eastern-countries}
 
-The current state of Europe (in 2007):
+The current GDP/capita of Europe (in 2007):
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -197,7 +196,8 @@ The current state of Europe (in 2007):
 \StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(continent }\OperatorTok{==}\StringTok{ "Europe"}\NormalTok{) }
 
 \NormalTok{(plot_eur <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_eur_}\DecValTok{2007}\NormalTok{) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ gdpPercap, }\DataTypeTok{y =}\NormalTok{ country)))}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ gdpPercap, }\DataTypeTok{y =}\NormalTok{ country))}
+\NormalTok{  ) }\CommentTok{#why parentheses around the command?}
 \end{Highlighting}
 \end{Shaded}
 
@@ -218,7 +218,7 @@ What about Asian countries in 2007?
 \StringTok{  }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"GDP/capita (USD)"}\NormalTok{, }
        \DataTypeTok{y =} \StringTok{"Country"}\NormalTok{,}
        \DataTypeTok{title =} \StringTok{"GDP per capita in Asia"}\NormalTok{,}
-       \DataTypeTok{subtitle =} \StringTok{"Measured in USD (2007)"}\NormalTok{))}
+       \DataTypeTok{subtitle =} \StringTok{"Put subtitle here"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -249,10 +249,18 @@ What about life expectancy in these countries with time?
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{data_CIFG <-}\StringTok{ }\NormalTok{data_gapminder }\OperatorTok{%>%}
-\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(country }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"China"}\NormalTok{, }\StringTok{"India"}\NormalTok{, }\StringTok{"France"}\NormalTok{, }\StringTok{"Germany"}\NormalTok{))}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(country }\OperatorTok{%in%}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"China"}\NormalTok{, }
+                               \StringTok{"India"}\NormalTok{, }
+                               \StringTok{"France"}\NormalTok{, }
+                               \StringTok{"Germany"}
+\NormalTok{                               )}
+\NormalTok{                )}
 
 \NormalTok{(plot_CIFG_life_exp <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_CIFG) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ lifeExp, }\DataTypeTok{color =}\NormalTok{ country))}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }
+                          \DataTypeTok{y =}\NormalTok{ lifeExp, }
+                          \DataTypeTok{color =}\NormalTok{ country)}
+\NormalTok{            )}
 \NormalTok{  )}
 \end{Highlighting}
 \end{Shaded}
@@ -280,7 +288,10 @@ What about life expectancy in these countries with time?
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{(plot_CIFG_life_cont <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_CIFG) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ lifeExp, }\DataTypeTok{color =}\NormalTok{ country)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }
+                          \DataTypeTok{y =}\NormalTok{ lifeExp, }
+                          \DataTypeTok{color =}\NormalTok{ country)}
+\NormalTok{            ) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{facet_wrap}\NormalTok{(}\OperatorTok{~}\StringTok{ }\NormalTok{continent)}
 \NormalTok{ )}
 \end{Highlighting}
@@ -421,18 +432,12 @@ What about GDP per capita of CIFG countries in 2007?
 \end{Shaded}
 
 \includegraphics{Intro_ggplot_files/figure-latex/CIFG_pop_2007-1.pdf}
-REWRITE:
 
-Some plot types (such as scatterplots) do not require
-transformations--each point is plotted at x and y coordinates equal to
-the original value. Other plots, such as boxplots, histograms,
-prediction lines etc. require statistical transformations:
-
-for a boxplot the y values must be transformed to the median and
-1.5(IQR)
-
-Each geom has a default statistic, but these can be changed. For
-example, the default statistic for geom\_bar is stat\_bin:
+While some types of plots (scatterplots) do not require any
+transformation---each point is plotted at \(x\) and \(y\) coordinates
+same as the original value, others (such as boxplots, histograms etc.)
+require transformations. For example, for boxplots, the median and the
+interquartile range (IQR) need computing.
 
 \subsection{Boxplots}\label{boxplots}
 
@@ -448,6 +453,12 @@ example, the default statistic for geom\_bar is stat\_bin:
 \end{Shaded}
 
 \includegraphics{Intro_ggplot_files/figure-latex/plot_CIFG_box-1.pdf}
+
+In some cases there are many variables for which we need boxplots; and
+including all of them on the \(x\) axis may cause their names to squish
+together, leading to poor visibility. In such cases, one can use the
+command \texttt{coord\_flip()} which, as the name suggests, flips the
+coordinates---from \(x\) to \(y\) and vice versa.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -465,6 +476,10 @@ example, the default statistic for geom\_bar is stat\_bin:
 \includegraphics{Intro_ggplot_files/figure-latex/plot_eur_box_flip-1.pdf}
 
 \subsection{Themes}\label{themes}
+
+Themes govern the overall ``look'' of the plot. The default theme is
+\texttt{theme\_grey()}. However, there are dozens of other themes which
+one may prefer. A small set of examples is presented here.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -518,37 +533,88 @@ example, the default statistic for geom\_bar is stat\_bin:
 
 \includegraphics{Intro_ggplot_files/figure-latex/CIFG_theme-3.pdf}
 
-\section{The Main FAQs}\label{the-main-faqs}
+\section{FAQ: How to Plot Multiple Variables
+Together?}\label{faq-how-to-plot-multiple-variables-together}
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  plotting multiple variables in one frame
-\end{enumerate}
+\subsection{Wide Versus Long Data}\label{wide-versus-long-data}
 
-Map Aesthetic To Different Columns The most frequently asked question
-goes something like this: I have two variables in my data.frame, and I'd
-like to plot them as separate points, with different color depending on
-which variable it is. How do I do that?
+When each column is a separate variable, the dataset is said to be in
+the ``wide'' format. In the ``long'' format, variables are ``gathered''
+together in one column with another containing values.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{temp <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\DecValTok{1991}\OperatorTok{:}\DecValTok{2010}\NormalTok{, }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{20}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{), }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{20}\NormalTok{, }\OperatorTok{-}\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{)) }\OperatorTok{%>%}
+\NormalTok{temp_w <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\DecValTok{1991}\OperatorTok{:}\DecValTok{2010}\NormalTok{, }
+                \KeywordTok{rnorm}\NormalTok{(}\DecValTok{20}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{), }
+                \KeywordTok{rnorm}\NormalTok{(}\DecValTok{20}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{5}\NormalTok{),}
+                \KeywordTok{rnorm}\NormalTok{(}\DecValTok{20}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{9}\NormalTok{)) }\OperatorTok{%>%}
 \StringTok{  }\NormalTok{tibble}\OperatorTok{::}\KeywordTok{as_tibble}\NormalTok{()}
-\KeywordTok{names}\NormalTok{(temp) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"year"}\NormalTok{, }\StringTok{"N01"}\NormalTok{, }\StringTok{"N25"}\NormalTok{)}
+\KeywordTok{names}\NormalTok{(temp_w) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"year"}\NormalTok{, }\StringTok{"N01"}\NormalTok{, }\StringTok{"N25"}\NormalTok{, }\StringTok{"N19"}\NormalTok{) }\CommentTok{#data in "wide" format}
 
-\NormalTok{(}\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ temp,}
+\KeywordTok{head}\NormalTok{(temp_w)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6 x 4
+##    year     N01   N25   N19
+##   <dbl>   <dbl> <dbl> <dbl>
+## 1  1991  0.140  0.804  5.28
+## 2  1992 -0.581  1.15  -9.01
+## 3  1993  0.568  7.21   1.56
+## 4  1994  0.0596 1.74   1.66
+## 5  1995 -0.0220 1.12   6.91
+## 6  1996  0.401  0.184 -2.60
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ temp_w,}
         \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year)) }\OperatorTok{+}\StringTok{ }
 \StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ N01), }\DataTypeTok{color =} \StringTok{"red"}\NormalTok{) }\OperatorTok{+}
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ N25), }\DataTypeTok{color =} \StringTok{"blue"}\NormalTok{)}
-\NormalTok{  )}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ N25), }\DataTypeTok{color =} \StringTok{"blue"}\NormalTok{) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{(}\DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ N19), }\DataTypeTok{color =} \StringTok{"green"}\NormalTok{)}
+\NormalTok{  ) }\CommentTok{#this method of plotting is not encouraged}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics{Intro_ggplot_files/figure-latex/wide_vs_long-1.pdf}
 
-\subsection{Wide Versus Long Data}\label{wide-versus-long-data}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{temp_l <-}\StringTok{ }\NormalTok{tidyr}\OperatorTok{::}\KeywordTok{gather}\NormalTok{(temp_w, }\KeywordTok{c}\NormalTok{(}\StringTok{"N01"}\NormalTok{, }\StringTok{"N25"}\NormalTok{, }\StringTok{"N19"}\NormalTok{), }
+                        \DataTypeTok{key =} \StringTok{"Normal RV"}\NormalTok{, }
+                        \DataTypeTok{value =} \StringTok{"Normal Realization"}
+\NormalTok{                        ) }\CommentTok{#converting data from wide to "long"}
+
+\KeywordTok{head}\NormalTok{(temp_l)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 6 x 3
+##    year `Normal RV` `Normal Realization`
+##   <dbl> <chr>                      <dbl>
+## 1  1991 N01                       0.140 
+## 2  1992 N01                      -0.581 
+## 3  1993 N01                       0.568 
+## 4  1994 N01                       0.0596
+## 5  1995 N01                      -0.0220
+## 6  1996 N01                       0.401
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ temp_l,}
+        \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }
+                      \DataTypeTok{y =} \StringTok{`}\DataTypeTok{Normal Realization}\StringTok{`}\NormalTok{,}
+                      \DataTypeTok{color =} \StringTok{`}\DataTypeTok{Normal RV}\StringTok{`}\NormalTok{)) }\OperatorTok{+}
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{()}
+\NormalTok{  ) }\CommentTok{#the preferred way of plotting is in the long format}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Intro_ggplot_files/figure-latex/wide_vs_long-2.pdf}
 
 \section*{References}\label{references}
 \addcontentsline{toc}{section}{References}

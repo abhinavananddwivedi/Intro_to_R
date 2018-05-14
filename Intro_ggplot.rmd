@@ -1,10 +1,16 @@
 ---
-title: "Introduction to ggplot"
+title: "Introduction to `ggplot()`"
 author: Abhinav Anand
 
-output: 
+output:
   pdf_document:
     keep_tex: true
+
+# output: 
+#   beamer_presentation:
+#     theme: "AnnArbor"
+#     colortheme: "dolphin"
+#     fonttheme: "structurebold"
   
 documentclass: article
 geometry: margin = 1.75in
@@ -61,13 +67,13 @@ data_gapminder <- gapminder::gapminder
 
 3. What is a dataframe?
 
-A data frame is a rectangular collection of variables (in the columns) and observations (in the rows). It's different from a 'mere' matrix since the columns have variable names usually and can contain different "types", say numeric and categorical and character and logical all together. 
+A data frame is a rectangular collection of variables (in the columns) and observations (in the rows). It's different from a 'mere' matrix since the columns have variable names usually and can contain different "types", say numeric, categorical, character and logical all together. 
 
 ## Questions
 
 ### Are "Western" countries richer than "Eastern" countries?
 
-The current state of Europe (in 2007):
+The current GDP/capita of Europe (in 2007):
 
 ```{r plot_eur, eval=T, echo=T, message=F, warning=T, include=T}
 
@@ -76,7 +82,8 @@ data_eur_2007 <- data_gapminder %>%
   dplyr::filter(continent == "Europe") 
 
 (plot_eur <- ggplot(data = data_eur_2007) +
-  geom_point(mapping = aes(x = gdpPercap, y = country)))
+  geom_point(mapping = aes(x = gdpPercap, y = country))
+  ) #why parentheses around the command?
 
 ```
 
@@ -95,7 +102,7 @@ data_asia_2007 <- data_gapminder %>%
   labs(x = "GDP/capita (USD)", 
        y = "Country",
        title = "GDP per capita in Asia",
-       subtitle = "Measured in USD (2007)"))
+       subtitle = "Put subtitle here"))
 
 ```
 
@@ -115,10 +122,18 @@ What about life expectancy in these countries with time?
 ```{r CIFG, message=F, warning=T, eval=T, echo=T, include=T}
 
 data_CIFG <- data_gapminder %>%
-  dplyr::filter(country %in% c("China", "India", "France", "Germany"))
+  dplyr::filter(country %in% c("China", 
+                               "India", 
+                               "France", 
+                               "Germany"
+                               )
+                )
 
 (plot_CIFG_life_exp <- ggplot(data = data_CIFG) +
-  geom_line(mapping = aes(x = year, y = lifeExp, color = country))
+  geom_line(mapping = aes(x = year, 
+                          y = lifeExp, 
+                          color = country)
+            )
   )
 
 ```
@@ -136,7 +151,10 @@ data_CIFG <- data_gapminder %>%
 ```{r CIFG_Facet, warning=T, message=F, include=T, eval=T, echo=T}
 
 (plot_CIFG_life_cont <- ggplot(data = data_CIFG) +
-  geom_line(mapping = aes(x = year, y = lifeExp, color = country)) +
+  geom_line(mapping = aes(x = year, 
+                          y = lifeExp, 
+                          color = country)
+            ) +
   facet_wrap(~ continent)
  )
 
@@ -236,13 +254,8 @@ What about GDP per capita of CIFG countries in 2007?
  )
 
 ```
-REWRITE:
 
-Some plot types (such as scatterplots) do not require transformations–each point is plotted at x and y coordinates equal to the original value. Other plots, such as boxplots, histograms, prediction lines etc. require statistical transformations:
-
-for a boxplot the y values must be transformed to the median and 1.5(IQR)
-
-Each geom has a default statistic, but these can be changed. For example, the default statistic for geom_bar is stat_bin:
+While some types of plots (scatterplots) do not require any transformation---each point is plotted at $x$ and $y$ coordinates same as the original value, others (such as boxplots, histograms etc.) require transformations. For example, for boxplots, the median and the interquartile range (IQR) need computing.
 
 ## Boxplots
 
@@ -257,6 +270,7 @@ Each geom has a default statistic, but these can be changed. For example, the de
 
 ```
 
+In some cases there are many variables for which we need boxplots; and including all of them on the $x$ axis may cause their names to squish together, leading to poor visibility. In such cases, one can use the command `coord_flip()` which, as the name suggests, flips the coordinates---from $x$ to $y$ and vice versa.
 
 ```{r plot_eur_box_flip, include=T, echo=T, eval=T, message=F, warning=T}
 
@@ -272,6 +286,8 @@ Each geom has a default statistic, but these can be changed. For example, the de
 ```
 
 ## Themes
+
+Themes govern the overall "look" of the plot. The default theme is `theme_grey()`. However, there are dozens of other themes which one may prefer. A small set of examples is presented here.
 
 ```{r CIFG_theme, warning=F, include=T, eval=T, echo=T, message=F}
 
@@ -313,28 +329,49 @@ Each geom has a default statistic, but these can be changed. For example, the de
 
 
 
-# The Main FAQs
+# FAQ: How to Plot Multiple Variables Together?
 
-1. plotting multiple variables in one frame
+## Wide Versus Long Data
 
-Map Aesthetic To Different Columns
-The most frequently asked question goes something like this: I have two variables in my data.frame, and I’d like to plot them as separate points, with different color depending on which variable it is. How do I do that?
+When each column is a separate variable, the dataset is said to be in the "wide" format. In the "long" format, variables are "gathered" together in one column with another containing values.
+
+
 
 ```{r wide_vs_long, warning=F, include=T, eval=T, echo=T, message=F}
 
-temp <- cbind(1991:2010, rnorm(20, 0, 1), rnorm(20, -1, 5)) %>%
+temp_w <- cbind(1991:2010, 
+                rnorm(20, 0, 1), 
+                rnorm(20, 2, 5),
+                rnorm(20, 1, 9)) %>%
   tibble::as_tibble()
-names(temp) <- c("year", "N01", "N25")
+names(temp_w) <- c("year", "N01", "N25", "N19") #data in "wide" format
 
-(ggplot(data = temp,
+head(temp_w)
+
+(ggplot(data = temp_w,
         mapping = aes(x = year)) + 
     geom_line(mapping = aes(y = N01), color = "red") +
-    geom_line(mapping = aes(y = N25), color = "blue")
-  )
+    geom_line(mapping = aes(y = N25), color = "blue") +
+    geom_line(mapping = aes(y = N19), color = "green")
+  ) #this method of plotting is not encouraged
+
+temp_l <- tidyr::gather(temp_w, c("N01", "N25", "N19"), 
+                        key = "Normal RV", 
+                        value = "Normal Realization"
+                        ) #converting data from wide to "long"
+
+head(temp_l)
+
+(ggplot(data = temp_l,
+        mapping = aes(x = year, 
+                      y = `Normal Realization`,
+                      color = `Normal RV`)) +
+    geom_line()
+  ) #the preferred way of plotting is in the long format
 
 ```
 
-## Wide Versus Long Data
+
 
 
 
