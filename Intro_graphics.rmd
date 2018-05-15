@@ -5,12 +5,6 @@ author: Abhinav Anand
 output:
   pdf_document:
     keep_tex: true
-
-# output: 
-#   beamer_presentation:
-#     theme: "AnnArbor"
-#     colortheme: "dolphin"
-#     fonttheme: "structurebold"
   
 documentclass: article
 geometry: margin = 1.75in
@@ -41,11 +35,11 @@ library(gapminder)
 # Setup
 
 The following discussion assumes you have donwloaded R and RStudio. Additionally, the package suite
-`tidyverse()` which includes the package `ggplot2()` needs to be included.
+`tidyverse()` which includes the package `ggplot2` needs to be included.
 
 1. For downloading R, visit <https://cran.r-project.org/>
 2. For downloading RStudio visit <https://www.rstudio.com/>
-3. For downloading `ggplot2()`, type `install.packages("ggplot2")` or equivalently for `tidyverse()`
+3. For downloading `ggplot2`, type `install.packages("ggplot2")` or equivalently for `tidyverse()`
 type `install.packages("tidyverse")`
 
 # Introduction to ggplot
@@ -77,7 +71,7 @@ The current GDP/capita of Europe (in 2007):
 
 ```{r plot_eur, eval=T, echo=T, message=F, warning=T, include=T}
 
-data_eur_2007 <- data_gapminder %>% 
+data_eur_2007 <- data_gapminder %>% #what is this funny sign?
   dplyr::filter(year == 2007) %>% #isolates variables for year 2007
   dplyr::filter(continent == "Europe") 
 

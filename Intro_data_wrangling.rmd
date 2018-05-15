@@ -1,5 +1,5 @@
 ---
-title: "Data Wrangling with `dplyr()`"
+title: "Data Wrangling with `dplyr`"
 author: Abhinav Anand
 
 output:
@@ -31,57 +31,202 @@ library(knitr)
 library(xml2)
 library(gapminder)
 
-data_gapminder <- gapminder::gapminder 
+knitr::opts_chunk$set(echo = T, 
+                      warning = T, 
+                      message = F, 
+                      eval = T, 
+                      include = T
+                      )
+
+
 
 ```
 
-```{r temp, eval=T, message=F, warning=T, include=T, echo=T}
+For data wrangling, the package `dplyr` is employed. For downloading, type `install.packages("dplyr")` or equivalently type `install.packages("tidyverse")`
 
-gapminder
-#what is the format? wide or long?
+
+```{r load_gapminder}
+
+(data_gapminder <- gapminder::gapminder)
+
+#what is the format: wide or long?
+#what is a tibble?
 ```
 
-### Tibbles
+### Notes
 
-It prints differently because it’s a tibble. Tibbles are data frames, but slightly tweaked to work better in the tidyverse
+1. **Data Types**: R has many in-built data types. Examples:
+    i. `fct`: "factor": categorical data which can assume finite levels, say A, B, C etc.
+    ii. `dbl`: "double": real numbers, say 3.671, 4.00, 10.122482929 etc.
+    iii. `int`: "integer": integers, say 3, 10, -9, 0 etc.
+    iv. `chr`: "character": say, "FMC", "Term 4" etc.
+    v. `lgl`: "logical": $\{0, 1\}\equiv \{\text{T, F}\}$
+    vi. `date`, and many more
 
-1. `fct`
-2. `dbl`
-3. `int`
-
-Other types: `chr`, `lgl`, `date` etc.
+2. **Tibbles**: Tibbles are essentially data frames, but slightly altered to work better in  tidyverse. (Compare `head(data_frame_name)` versus `tibble_name`.)
 
 # `dplyr()`: The Main Verbs
 
-Pick observations by their values (filter()).
-Reorder the rows (arrange()).
-Pick variables by their names (select()).
-Create new variables with functions of existing variables (mutate()).
-Collapse many values down to a single summary (summarise()).
-These can all be used in conjunction with group_by() which changes the scope of each function from operating on the entire dataset to operating on it group-by-group. These six functions provide the verbs for a language of data manipulation.
+1. `filter()`: Extract rows
+2. `select()`: Extract columns
+3. `arrange()`: Order rows
+4. `mutate()`: Create new columns (= variables)
+5. `summarise()`: Compute summary statistics
 
-All verbs work similarly:
-
-The first argument is a data frame.
-
-The subsequent arguments describe what to do with the data frame, using the variable names (without quotes).
-
-The result is a new data frame.
+The syntax for all five verbs is similar. The first argument is the data frame, followed by the action to be performed using the variable name.
 
 ## Filter
 
+Let us observe the state of the world in 1952 and the contrast and compare with that in 2007.
+
+```{r filter_rows}
+
+(data_1952 <- data_gapminder %>%
+  dplyr::filter(year == 1952) #extract the rows for year 1952
+ ) #note == as opposed to =
+
+(data_2007 <- data_gapminder %>%
+  dplyr::filter(year == 2007) #extract the rows for year 2007
+ )
+
+```
+
+## Select
+
+Let us also focus on two variables---GDP/capita and life expectancy. We extract both for years 1952 and 2007.
+
+```{r select_columns}
+
+(data_1952_gdppc <- data_1952 %>%
+  dplyr::select(country, year, gdpPercap)
+ )
+(data_2007_gdppc <- data_2007 %>%
+  dplyr::select(country, year, gdpPercap)
+ )
+(data_1952_life_exp <- data_1952 %>%
+  dplyr::select(country, year, lifeExp)
+ )
+(data_2007_life_exp <- data_2007 %>%
+  dplyr::select(country, year, lifeExp)
+ )
+
+# = dplyr::select(-c(continent, pop, gdpPercap))
+```
+
+`dplyr::rename()` is a wrapper function for `select()` which renames the variable in consideration and keeps all other variables intact.
 
 ## Arrange
 
+Usage of `arrange()` orders (from first to last) entries on the basis of a variable. 
 
+### Question: Is the set of richest countries the same in 1952 and 2007?
 
-## Select
+```{r arrange_gdppc}
+
+(data_1952_rich <- data_1952_gdppc %>%
+  dplyr::arrange(desc(gdpPercap)) #note the use of desc()
+ )
+
+(data_2007_rich <- data_2007_gdppc %>%
+  dplyr::arrange(desc(gdpPercap)) #note the use of desc()
+ )
+
+```
+
+### Which countries display the highest life expectancy pre-2000?
+
+```{r arrange_life_pre00}
+
+(data_life_pre00 <- data_gapminder %>%
+  dplyr::select(country, year, lifeExp) %>%
+  dplyr::filter(year <= 2000) %>%
+  dplyr::arrange(desc(lifeExp))
+ )
+
+```
+
+### Post-2000?
+
+```{r arrange_life_post00}
+
+(data_life_post00 <- data_gapminder %>%
+  dplyr::select(country, year, lifeExp) %>%
+  dplyr::filter(year > 2000) %>%
+  dplyr::arrange(desc(lifeExp))
+ )
+
+```
 
 
 ## Mutate
 
+Let's define a new variable called "total GDP" which is the product of the GDP/capita and the total population. To compute it and include it in the list of variables we can use the verb `dplyr::mutate()`.
+
+
+
+```{r mutate_GDP_tot}
+
+(data_GDP_tot <- data_gapminder %>%
+   dplyr::mutate(GDP_total = pop*gdpPercap/10^9) #in USD billions
+ )
+
+```
+
+
+In general, for `mutate()` to work well, the function must take a vector of values as input and return a vector with the same number of values as output. A short list of functions that can be used with `mutate()` are: 
+
+1. Arithmetic operators: `+`, `-`, `*`, `/`, `^`
+2. Logs: `log()`, `log2()`, `log10()`
+3. Cumulative aggregates: `cumsum()`, `cumprod()`, `cummin()`, `cummax()`, `cummean()` etc.
+
+and many more.
+
+### Question: Which countries have the highest total GDP in 1952 and 2007?
+
+```{r GDP_tot_most}
+
+(data_GDP_tot %>% 
+   dplyr::filter(year == 1952) %>%
+   dplyr::arrange(desc(GDP_total))
+ )
+
+(data_GDP_tot %>% 
+   dplyr::filter(year == 2007) %>%
+   dplyr::arrange(desc(GDP_total))
+ )
+```
+
+### Question: Which are the five smallest economies in 2007 (by total GDP)?
+
+```{r GDP_tot_top_5}
+
+(data_GDP_tot %>% 
+   dplyr::filter(year == 2007) %>%
+   dplyr::arrange(GDP_total) %>%
+   dplyr::filter(rank(GDP_total) <= 5)
+ )
+```
+
 
 ## Summarise
 
+The function `summarise()` (or equivalently `summarize()`) can be used to compute summary statistics. Here is an example, where we summarize the variable life expectancy for the continent Europe.
 
-## Grouped Mutate
+```{r summ_life_exp_eur}
+
+(life_exp_summ_eur <- data_gapminder %>%
+  dplyr::filter(continent == "Europe") %>%
+  dplyr::summarise(average = mean(lifeExp),
+                   med = median(lifeExp),
+                   std = sd(lifeExp),
+                   variance = var(lifeExp),
+                   iqr = IQR(lifeExp)
+                   )
+ )
+
+
+```
+
+### Grouped Summaries
+
+### Grouped Mutate
