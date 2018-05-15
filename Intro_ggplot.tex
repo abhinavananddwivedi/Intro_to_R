@@ -444,7 +444,7 @@ interquartile range (IQR) need computing.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{(plot_CIFG_box <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_CIFG,}
-                         \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }
+                         \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ country, }
                                        \DataTypeTok{y =}\NormalTok{ lifeExp,}
                                        \DataTypeTok{color =}\NormalTok{ country)) }\OperatorTok{+}
 \StringTok{   }\KeywordTok{geom_boxplot}\NormalTok{()}
@@ -464,7 +464,7 @@ coordinates---from \(x\) to \(y\) and vice versa.
 \begin{Highlighting}[]
 \NormalTok{(plot_eur_box_flip <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =} \KeywordTok{filter}\NormalTok{(data_gapminder,}
 \NormalTok{                                           continent }\OperatorTok{==}\StringTok{ "Europe"}\NormalTok{),}
-                         \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }
+                         \DataTypeTok{mapping =} \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ country, }
                                        \DataTypeTok{y =}\NormalTok{ lifeExp,}
                                        \DataTypeTok{color =}\NormalTok{ country)) }\OperatorTok{+}
 \StringTok{   }\KeywordTok{geom_boxplot}\NormalTok{() }\OperatorTok{+}
@@ -557,14 +557,14 @@ together in one column with another containing values.
 
 \begin{verbatim}
 ## # A tibble: 6 x 4
-##    year     N01   N25   N19
-##   <dbl>   <dbl> <dbl> <dbl>
-## 1  1991  0.140  0.804  5.28
-## 2  1992 -0.581  1.15  -9.01
-## 3  1993  0.568  7.21   1.56
-## 4  1994  0.0596 1.74   1.66
-## 5  1995 -0.0220 1.12   6.91
-## 6  1996  0.401  0.184 -2.60
+##    year    N01    N25     N19
+##   <dbl>  <dbl>  <dbl>   <dbl>
+## 1  1991  0.469   1.02   0.849
+## 2  1992 -0.323   8.82  13.3  
+## 3  1993  0.490   2.08   2.99 
+## 4  1994  1.22    8.75  11.6  
+## 5  1995  1.69  -10.5    1.58 
+## 6  1996 -1.48    5.26  -7.84
 \end{verbatim}
 
 \begin{Shaded}
@@ -595,12 +595,12 @@ together in one column with another containing values.
 ## # A tibble: 6 x 3
 ##    year `Normal RV` `Normal Realization`
 ##   <dbl> <chr>                      <dbl>
-## 1  1991 N01                       0.140 
-## 2  1992 N01                      -0.581 
-## 3  1993 N01                       0.568 
-## 4  1994 N01                       0.0596
-## 5  1995 N01                      -0.0220
-## 6  1996 N01                       0.401
+## 1  1991 N01                        0.469
+## 2  1992 N01                       -0.323
+## 3  1993 N01                        0.490
+## 4  1994 N01                        1.22 
+## 5  1995 N01                        1.69 
+## 6  1996 N01                       -1.48
 \end{verbatim}
 
 \begin{Shaded}

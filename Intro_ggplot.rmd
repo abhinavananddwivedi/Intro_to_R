@@ -262,7 +262,7 @@ While some types of plots (scatterplots) do not require any transformation---eac
 ```{r plot_CIFG_box, include=T, echo=T, eval=T, message=F, warning=T}
 
 (plot_CIFG_box <- ggplot(data = data_CIFG,
-                         mapping = aes(x = year, 
+                         mapping = aes(x = country, 
                                        y = lifeExp,
                                        color = country)) +
    geom_boxplot()
@@ -276,7 +276,7 @@ In some cases there are many variables for which we need boxplots; and including
 
 (plot_eur_box_flip <- ggplot(data = filter(data_gapminder,
                                            continent == "Europe"),
-                         mapping = aes(x = year, 
+                         mapping = aes(x = country, 
                                        y = lifeExp,
                                        color = country)) +
    geom_boxplot() +
