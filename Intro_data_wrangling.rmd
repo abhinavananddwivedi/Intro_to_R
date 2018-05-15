@@ -1,0 +1,87 @@
+---
+title: "Data Wrangling with `dplyr()`"
+author: Abhinav Anand
+
+output:
+  pdf_document:
+    keep_tex: true
+
+  
+documentclass: article
+geometry: margin = 1.75in
+
+linkcolor: blue
+urlcolor: red
+citecolor: magenta
+
+citation_package: natbib
+bibliography: Working_Paper.bib
+
+header-includes:
+   - \linespread{1.3}
+
+
+---
+
+```{r setup, eval=T, message=FALSE, warning=T, include=FALSE, echo=F}
+
+library(tidyverse)
+library(rmarkdown)
+library(knitr)
+library(xml2)
+library(gapminder)
+
+data_gapminder <- gapminder::gapminder 
+
+```
+
+```{r temp, eval=T, message=F, warning=T, include=T, echo=T}
+
+gapminder
+#what is the format? wide or long?
+```
+
+### Tibbles
+
+It prints differently because it’s a tibble. Tibbles are data frames, but slightly tweaked to work better in the tidyverse
+
+1. `fct`
+2. `dbl`
+3. `int`
+
+Other types: `chr`, `lgl`, `date` etc.
+
+# `dplyr()`: The Main Verbs
+
+Pick observations by their values (filter()).
+Reorder the rows (arrange()).
+Pick variables by their names (select()).
+Create new variables with functions of existing variables (mutate()).
+Collapse many values down to a single summary (summarise()).
+These can all be used in conjunction with group_by() which changes the scope of each function from operating on the entire dataset to operating on it group-by-group. These six functions provide the verbs for a language of data manipulation.
+
+All verbs work similarly:
+
+The first argument is a data frame.
+
+The subsequent arguments describe what to do with the data frame, using the variable names (without quotes).
+
+The result is a new data frame.
+
+## Filter
+
+
+## Arrange
+
+
+
+## Select
+
+
+## Mutate
+
+
+## Summarise
+
+
+## Grouped Mutate
