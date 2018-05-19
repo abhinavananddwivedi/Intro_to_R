@@ -229,4 +229,42 @@ The function `summarise()` (or equivalently `summarize()`) can be used to comput
 
 ### Grouped Summaries
 
-### Grouped Mutate
+### Question: What are continent-wise summary statistics?
+
+```{r summ_cont}
+
+(summ_life_exp <- data_gapminder %>%
+  dplyr::group_by(continent) %>%
+  dplyr::summarise(average = mean(lifeExp),
+                   med = median(lifeExp),
+                   std = sd(lifeExp),
+                   variance = var(lifeExp),
+                   iqr = IQR(lifeExp)
+                   )
+ )
+
+ggplot(data = summ_life_exp, 
+       aes(x = continent, y = average)) +
+  geom_bar(stat = "identity")
+
+
+(summ_year_life_exp <- data_gapminder %>%
+  dplyr::group_by(year) %>%
+  dplyr::summarise(average = mean(lifeExp),
+                   med = median(lifeExp),
+                   std = sd(lifeExp),
+                   variance = var(lifeExp),
+                   iqr = IQR(lifeExp)
+                   )
+ )
+
+ggplot(data = summ_year_life_exp, 
+       aes(x = year, y = average)) + 
+  geom_point()
+
+
+
+```
+
+One can also perform grouped mutates and grouped filters.
+

@@ -667,7 +667,87 @@ summarize the variable life expectancy for the continent Europe.
 
 \subsubsection{Grouped Summaries}\label{grouped-summaries}
 
-\subsubsection{Grouped Mutate}\label{grouped-mutate}
+\subsubsection{Question: What are continent-wise summary
+statistics?}\label{question-what-are-continent-wise-summary-statistics}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(summ_life_exp <-}\StringTok{ }\NormalTok{data_gapminder }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{group_by}\NormalTok{(continent) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{average =} \KeywordTok{mean}\NormalTok{(lifeExp),}
+                   \DataTypeTok{med =} \KeywordTok{median}\NormalTok{(lifeExp),}
+                   \DataTypeTok{std =} \KeywordTok{sd}\NormalTok{(lifeExp),}
+                   \DataTypeTok{variance =} \KeywordTok{var}\NormalTok{(lifeExp),}
+                   \DataTypeTok{iqr =} \KeywordTok{IQR}\NormalTok{(lifeExp)}
+\NormalTok{                   )}
+\NormalTok{ )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 5 x 6
+##   continent average   med   std variance   iqr
+##   <fct>       <dbl> <dbl> <dbl>    <dbl> <dbl>
+## 1 Africa       48.9  47.8  9.15     83.7 12.0 
+## 2 Americas     64.7  67.0  9.35     87.3 13.3 
+## 3 Asia         60.1  61.8 11.9     141.  18.1 
+## 4 Europe       71.9  72.2  5.43     29.5  5.88
+## 5 Oceania      74.3  73.7  3.80     14.4  6.35
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ summ_life_exp, }
+       \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ continent, }\DataTypeTok{y =}\NormalTok{ average)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_bar}\NormalTok{(}\DataTypeTok{stat =} \StringTok{"identity"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Intro_data_wrangling_files/figure-latex/summ_cont-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(summ_year_life_exp <-}\StringTok{ }\NormalTok{data_gapminder }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{group_by}\NormalTok{(year) }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{summarise}\NormalTok{(}\DataTypeTok{average =} \KeywordTok{mean}\NormalTok{(lifeExp),}
+                   \DataTypeTok{med =} \KeywordTok{median}\NormalTok{(lifeExp),}
+                   \DataTypeTok{std =} \KeywordTok{sd}\NormalTok{(lifeExp),}
+                   \DataTypeTok{variance =} \KeywordTok{var}\NormalTok{(lifeExp),}
+                   \DataTypeTok{iqr =} \KeywordTok{IQR}\NormalTok{(lifeExp)}
+\NormalTok{                   )}
+\NormalTok{ )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 12 x 6
+##     year average   med   std variance   iqr
+##    <int>   <dbl> <dbl> <dbl>    <dbl> <dbl>
+##  1  1952    49.1  45.1  12.2     149.  20.7
+##  2  1957    51.5  48.4  12.2     150.  21.8
+##  3  1962    53.6  50.9  12.1     146.  21.8
+##  4  1967    55.7  53.8  11.7     137.  21.4
+##  5  1972    57.6  56.5  11.4     130.  20.7
+##  6  1977    59.6  59.7  11.2     126.  19.9
+##  7  1982    61.5  62.4  10.8     116.  18.0
+##  8  1987    63.2  65.8  10.6     111.  16.9
+##  9  1992    64.2  67.7  11.2     126.  16.5
+## 10  1997    65.0  69.4  11.6     134.  18.5
+## 11  2002    65.7  70.8  12.3     151.  19.9
+## 12  2007    67.0  71.9  12.1     146.  19.3
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ summ_year_life_exp, }
+       \KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ year, }\DataTypeTok{y =}\NormalTok{ average)) }\OperatorTok{+}\StringTok{ }
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Intro_data_wrangling_files/figure-latex/summ_cont-2.pdf}
+
+One can also perform grouped mutates and grouped filters.
 
 
 \end{document}
