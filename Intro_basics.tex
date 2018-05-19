@@ -1,0 +1,489 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin = 1.75in]{geometry}
+\usepackage{hyperref}
+\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\hypersetup{unicode=true,
+            pdftitle={Introduction to Basic R},
+            pdfauthor={Abhinav Anand},
+            colorlinks=true,
+            linkcolor=blue,
+            citecolor=magenta,
+            urlcolor=red,
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+  \title{Introduction to Basic R}
+  \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \author{Abhinav Anand}
+  \preauthor{\centering\large\emph}
+  \postauthor{\par}
+  \date{}
+  \predate{}\postdate{}
+
+\linespread{1.3}
+
+\begin{document}
+\maketitle
+
+The most basic way in which one can use R is as a calculator:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(t <-}\StringTok{ }\KeywordTok{sin}\NormalTok{(pi}\OperatorTok{/}\DecValTok{4}\NormalTok{)) }\CommentTok{#enclosing in parentheses prints output}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.7071068
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\FloatTok{2.342929}\OperatorTok{*}\FloatTok{1.19483}\NormalTok{)}\OperatorTok{/}\FloatTok{4.9802244}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.5621036
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x <-}\StringTok{ }\DecValTok{3}\OperatorTok{*}\FloatTok{10.4293939}
+\KeywordTok{round}\NormalTok{(x, }\DataTypeTok{digits =} \DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 31.2882
+\end{verbatim}
+
+\subsubsection{Remarks}\label{remarks}
+
+Note the use of \texttt{\textless{}-} as opposed to \texttt{=}. In other
+programming languages, one uses the equality sign for assignment but in
+R the ``assignment operator'' is different. This is so because
+\texttt{=} is reserved for use in function arguments. (Example:
+\texttt{round(x,\ digits\ =\ 4)}. Note however, that even if \texttt{=}
+is used in lieu of \texttt{\textless{}-} all codes work okay. Confirm by
+computing, say \texttt{(x\ =\ 3*10.4293939)})
+
+Some other useful operations:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{1}\OperatorTok{:}\DecValTok{10}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  1  2  3  4  5  6  7  8  9 10
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{) }\CommentTok{#the sequence generator function}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  1  2  3  4  5  6  7  8  9 10
+\end{verbatim}
+
+R has several packages with in-built functions. In order to use them,
+one needs to declare their use. For our purposes, we will extensively
+use the suite of packages \texttt{tidyverse} written primarily by Hadley
+Wickham.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Vectors}\label{vectors}
+
+There are two main types of vectors in R: atomic and non-atomic. Atomic
+vectors have components of the same type, say double, or integer or
+logical etc. These are also referred to as ``numeric'' vectors.
+Non-atomic vectors (including ``lists'') can contain heterogenous
+components.
+
+\subsection{Recycling}\label{recycling}
+
+There are no built-in scalars in R. Scalars are implemented as vectors
+of length 1. Most functions in R, hence, are vectorized---they take
+vector arguments and operate on it component-wise. For example, for the
+vector \texttt{x\ \textless{}-\ 1:100}, the function \texttt{sin(x)}
+produces each component's sine, i.e., \texttt{sin(1):sin(100)}.
+
+When we mix scalars and vectors, the scalars are automatically
+replicated to be the same size as the vector. For example:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{1} \OperatorTok{+}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{10}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  2  3  4  5  6  7  8  9 10 11
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#is the same operation as }
+
+\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{10}\NormalTok{) }\OperatorTok{+}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{10} \CommentTok{#note the highly useful rep() function}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  2  3  4  5  6  7  8  9 10 11
+\end{verbatim}
+
+A related question: what happens if we add two vectors of different
+lengths?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{1}\OperatorTok{:}\DecValTok{3} \OperatorTok{+}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{15}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  2  4  6  5  7  9  8 10 12 11 13 15 14 16 18
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#is the same as}
+
+\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{) }\OperatorTok{+}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{15}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  2  4  6  5  7  9  8 10 12 11 13 15 14 16 18
+\end{verbatim}
+
+This is ``recycling'': R replicates the shorter vector to the same
+length as the longer vector and then adds the two together. While such
+usage is uncommon for other programming languages, it has undeniable
+utility, though one needs to be cautious when implementing this idea.
+
+\subsection{\texorpdfstring{The \texttt{c()}
+operator}{The c() operator}}\label{the-c-operator}
+
+The \texttt{c()} operator stands for ``concatenate'' or according to
+some writers, ``combine''.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y <-}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{4}
+
+\NormalTok{(y_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{5}\OperatorTok{:}\DecValTok{10}\NormalTok{, y)) }\CommentTok{#concatenate}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  5  6  7  8  9 10  1  2  3  4
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(y_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\NormalTok{y_}\DecValTok{2}\NormalTok{[}\KeywordTok{c}\NormalTok{(}\DecValTok{3}\OperatorTok{:}\DecValTok{7}\NormalTok{)] )}\CommentTok{#note the square brackets}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  7  8  9 10  1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(y_}\DecValTok{4}\NormalTok{ <-}\StringTok{ }\NormalTok{y_}\DecValTok{2}\NormalTok{[}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{4}\NormalTok{)]) }\CommentTok{#note the - sign}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  6  7  9 10  1  2  3  4
+\end{verbatim}
+
+\section{Pipes}\label{pipes}
+
+Consider the following problem: given a vector, we need to take its
+sine, then take the mean, then square it and then if the resulting
+number is more than 1, print ``more than 1'', else print ``less than
+1''.
+
+We can do this in the following way:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x <-}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{100} \CommentTok{#initial vector}
+
+\NormalTok{x_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{sin}\NormalTok{(x) }\CommentTok{#note vectorized function}
+
+\NormalTok{x_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\NormalTok{(}\KeywordTok{mean}\NormalTok{(x_}\DecValTok{1}\NormalTok{))}\OperatorTok{^}\DecValTok{2} \CommentTok{#take mean, square}
+
+\ControlFlowTok{if}\NormalTok{(x_}\DecValTok{2} \OperatorTok{>=}\StringTok{ }\DecValTok{1}\NormalTok{) }\CommentTok{#note the syntax for the if statement}
+\NormalTok{\{}
+  \KeywordTok{print}\NormalTok{(}\StringTok{"more than 1"}\NormalTok{)}
+\NormalTok{\} }\ControlFlowTok{else}
+\NormalTok{\{}
+  \KeywordTok{print}\NormalTok{(}\StringTok{"less than 1"}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "less than 1"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# or more succinctly in one line}
+
+\ControlFlowTok{if}\NormalTok{(}\KeywordTok{mean}\NormalTok{(}\KeywordTok{sin}\NormalTok{(x))}\OperatorTok{^}\DecValTok{2} \OperatorTok{>=}\StringTok{ }\DecValTok{1}\NormalTok{)}
+\NormalTok{\{}
+  \KeywordTok{print}\NormalTok{(}\StringTok{"more than 1"}\NormalTok{)}
+\NormalTok{\} }\ControlFlowTok{else}
+\NormalTok{\{}
+  \KeywordTok{print}\NormalTok{(}\StringTok{"less than 1"}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "less than 1"
+\end{verbatim}
+
+However, there is another way to do this with pipes which can be read as
+the ``then'' operator. In fact, whenever we encounter the pipe symbol
+\texttt{\%\textgreater{}\%}, without loss of generality, we can replace
+it with the word ``then''.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{x_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\NormalTok{x }\OperatorTok{%>%}\StringTok{ }\KeywordTok{sin}\NormalTok{(.) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{mean}\NormalTok{(.) }\OperatorTok{%>%}\StringTok{ }\NormalTok{.}\OperatorTok{^}\DecValTok{2} 
+\CommentTok{# read as: take x, then take sine }
+\CommentTok{# then take mean, then square}
+
+\ControlFlowTok{if}\NormalTok{(x_}\DecValTok{3} \OperatorTok{>=}\StringTok{ }\DecValTok{1}\NormalTok{)}
+\NormalTok{\{}
+  \KeywordTok{print}\NormalTok{(}\StringTok{"more than 10"}\NormalTok{)}
+\NormalTok{\} }\ControlFlowTok{else}
+\NormalTok{\{}
+  \KeywordTok{print}\NormalTok{(}\StringTok{"less than 1"}\NormalTok{)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "less than 1"
+\end{verbatim}
+
+Pipes are very powerful when expressing a sequence of operations. The
+pipe, \texttt{\%\textgreater{}\%} comes from the \texttt{magrittr}
+package but the tidyverse loads it automatically.
+
+\section{Functions}\label{functions}
+
+Functions automate common tasks succinctly. According to Hadley Wickham,
+a general rule of thumb is that if we need to copy-paste more than
+thrice, it's time to write a function. Writing functions has many uses:
+its name betrays its intentions; if changes are needed only one edit is
+enough; and the chance of errors while copy-pasting decreases
+drastically when working with functions.
+
+Suppose there are normal random variables and we wish to transform them
+to standard normal.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{t_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{) }\CommentTok{#number of points, mean, sigma}
+\NormalTok{t_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{100}\NormalTok{)}
+\NormalTok{t_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{200}\NormalTok{)}
+
+\NormalTok{t_1_s <-}\StringTok{ }\NormalTok{(t_}\DecValTok{1}\OperatorTok{-}\DecValTok{5}\NormalTok{)}\OperatorTok{/}\DecValTok{10} 
+\NormalTok{t_2_s <-}\StringTok{ }\NormalTok{(t_}\DecValTok{1}\OperatorTok{-}\DecValTok{10}\NormalTok{)}\OperatorTok{/}\DecValTok{100}
+\NormalTok{t_3_s <-}\StringTok{ }\NormalTok{(t_}\DecValTok{1}\OperatorTok{-}\DecValTok{20}\NormalTok{)}\OperatorTok{/}\DecValTok{200}
+\end{Highlighting}
+\end{Shaded}
+
+However, this could be automated if we write a function
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{norm_std <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(t, mu, sigma) }\CommentTok{#note the syntax}
+\NormalTok{\{}
+\NormalTok{  t_std <-}\StringTok{ }\NormalTok{(t }\OperatorTok{-}\StringTok{ }\NormalTok{mu)}\OperatorTok{/}\NormalTok{sigma}
+  
+  \KeywordTok{return}\NormalTok{(t_std) }\CommentTok{#note the return function}
+\NormalTok{\}}
+
+\KeywordTok{norm_std}\NormalTok{(t_}\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{head}\NormalTok{(.) }\CommentTok{#what does this mean?}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  0.13835017  1.81346227  2.36536890 -1.87190883  0.02885717 -0.39223091
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{norm_std}\NormalTok{(t_}\DecValTok{2}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{100}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{head}\NormalTok{(.)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  1.6477624  1.4324217  0.5215922 -0.6121719 -0.9815873  1.3412588
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{norm_std}\NormalTok{(t_}\DecValTok{3}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{200}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{head}\NormalTok{(.)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -0.6480560 -0.9488602 -0.4513801 -1.0058521  0.1010215 -0.2893860
+\end{verbatim}
+
+\section{Directory Management}\label{directory-management}
+
+If we save something in R or if we wish to access some file in R, we
+need to ensure that they are in the same folder (directory) as our code.
+This gives rise to the notion of the working directory which is
+displayed at the top of the console. We can explicitly find the name of
+the working directory by the command \texttt{getwd()}.
+
+To pinpoint addresses of folders, Mac and Linux use slashes (say
+\texttt{plots/plot\_1.pdf}) but Windows uses backslashes
+(\texttt{plots\textbackslash{}plot\_1.pdf}). However, backslashes are
+reserved in R---in that they cannot be used as they are. Hence to
+include each backslash, we need to prefix another backslash, which may
+be confusing. Hence many writers suggest using the Linux/Mac style
+addresses.
+
+\section{RStudio Projects}\label{rstudio-projects}
+
+It is good practice to keep all files related to a project together in
+one folder. This may include script files (with .R extension), plots,
+data files etc. RStudio uses ``projects'' with .Rproj extension for this
+special purpose.
+
+In general, it is considered good practice to keep one project for each
+data analysis exercise and put all data files, scripts, outputs (such as
+plots) in that folder. It is also recommended that relative paths be
+used and not absolute paths.
+
+
+\end{document}
