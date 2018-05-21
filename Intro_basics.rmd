@@ -6,9 +6,9 @@ output:
   pdf_document:
     keep_tex: true
 
-fontsize: 11pt
+fontsize: 12pt
 documentclass: article
-geometry: margin = 1.75in
+geometry: margin = 1.5in
 
 linkcolor: blue
 urlcolor: red
@@ -18,7 +18,7 @@ citation_package: natbib
 bibliography: Working_Paper.bib
 
 header-includes:
-   - \linespread{1.3}
+   - \linespread{1.2}
 
 
 ---
@@ -38,6 +38,14 @@ knitr::opts_chunk$set(echo = T,
                       include = T
                       )
 ```
+
+# Setup
+
+The following discussion assumes you have donwloaded R and RStudio. The package `gapminder` needs to be installed prior to running the commands below.
+
+1. For downloading R, visit <https://cran.r-project.org/>
+2. For downloading RStudio visit <https://www.rstudio.com/>
+3. To install, type `install.packages("gapminder")` in the RStudio console.
 
 The most basic way in which one can use R is as a calculator:
 

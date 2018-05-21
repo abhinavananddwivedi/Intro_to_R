@@ -1,4 +1,4 @@
-\documentclass[11pt,]{article}
+\documentclass[12pt,]{article}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -21,7 +21,7 @@
 \usepackage{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\usepackage[margin = 1.75in]{geometry}
+\usepackage[margin = 1.5in]{geometry}
 \usepackage{hyperref}
 \PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
 \hypersetup{unicode=true,
@@ -126,14 +126,34 @@
   \date{}
   \predate{}\postdate{}
 
-\linespread{1.3}
+\linespread{1.2}
 
 \begin{document}
 \maketitle
 
-For data wrangling, the package \texttt{dplyr} is employed. For
-downloading, type \texttt{install.packages("dplyr")} or equivalently
-type \texttt{install.packages("tidyverse")}
+\section{Setup}\label{setup}
+
+The following discussion assumes you have donwloaded R and RStudio.
+Additionally, the package suite \texttt{tidyverse()} which includes the
+package \texttt{dplyr} needs to be included. Also, the package
+\texttt{gapminder} needs to be installed prior to running the commands
+below.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  For downloading R, visit \url{https://cran.r-project.org/}
+\item
+  For downloading RStudio visit \url{https://www.rstudio.com/}
+\item
+  For downloading \texttt{dplyr}, type
+  \texttt{install.packages("ggplot2")} or equivalently for
+  \texttt{tidyverse()} type \texttt{install.packages("tidyverse")}
+\item
+  To install, type \texttt{install.packages("gapminder")} in the RStudio
+  console.
+\end{enumerate}
 
 \begin{Shaded}
 \begin{Highlighting}[]
