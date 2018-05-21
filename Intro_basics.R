@@ -33,34 +33,6 @@ seq(1:10) #the sequence generator function
 library(tidyverse)
 
 
-## ----vector--------------------------------------------------------------
-
-1 + 1:10
-
-#is the same operation as 
-
-rep(1, 10) + 1:10 #note the highly useful rep() function
-
-## ----vector_scalar-------------------------------------------------------
-
-1:3 + 1:15
-
-#is the same as
-
-rep(1:3, 5) + 1:15
-
-
-## ----concatenate---------------------------------------------------------
-
-y <- 1:4
-
-(y_2 <- c(5:10, y)) #concatenate
-
-(y_3 <- y_2[c(3:7)] )#note the square brackets
-(y_4 <- y_2[-c(1, 4)]) #note the - sign
-
-
-
 ## ----pipe_0--------------------------------------------------------------
 
 x <- 1:100 #initial vector
@@ -101,6 +73,64 @@ if(x_3 >= 1)
 {
   print("less than 1")
 }
+
+
+## ----vector--------------------------------------------------------------
+
+1 + 1:10
+
+#is the same operation as 
+
+rep(1, 10) + 1:10 #note the highly useful rep() function
+
+## ----vector_scalar-------------------------------------------------------
+
+1:3 + 1:15
+
+#is the same as
+
+rep(1:3, 5) + 1:15
+
+
+## ----concatenate---------------------------------------------------------
+
+y <- 1:4
+
+(y_2 <- c(5:10, y)) #concatenate
+
+(y_3 <- y_2[c(3:7)] )#note the square brackets
+(y_4 <- y_2[-c(1, 4)]) #note the - sign
+
+
+
+## ----mat_array-----------------------------------------------------------
+
+c_1 <- c(4, 9, 10, 12)
+c_2 <- c(10, 3, 1, 10)
+
+(mat_c <- cbind(c_1, c_2)) #column-bind
+(mat_r <- rbind(c_1, c_2)) #row-bind
+
+
+## ----data_frames---------------------------------------------------------
+
+df <- data.frame(a = runif(1:10), 
+                 b = rnorm(10, 0, 1),
+                 c = 11:20
+                 )
+
+df$a %>% head()
+
+names(df)
+
+
+## ----data_frames_subsets-------------------------------------------------
+
+df[, 1] %>% head() #column 1
+
+df[3, ] %>% head() #row 3
+
+df[c(1,2), "c"]
 
 
 ## ----function_0----------------------------------------------------------

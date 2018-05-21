@@ -225,115 +225,6 @@ Wickham.
 \end{Highlighting}
 \end{Shaded}
 
-\section{Vectors}\label{vectors}
-
-There are two main types of vectors in R: atomic and non-atomic. Atomic
-vectors have components of the same type, say double, or integer or
-logical etc. These are also referred to as ``numeric'' vectors.
-Non-atomic vectors (including ``lists'') can contain heterogenous
-components.
-
-\subsection{Recycling}\label{recycling}
-
-There are no built-in scalars in R. Scalars are implemented as vectors
-of length 1. Most functions in R, hence, are vectorized---they take
-vector arguments and operate on it component-wise. For example, for the
-vector \texttt{x\ \textless{}-\ 1:100}, the function \texttt{sin(x)}
-produces each component's sine, i.e., \texttt{sin(1):sin(100)}.
-
-When we mix scalars and vectors, the scalars are automatically
-replicated to be the same size as the vector. For example:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\DecValTok{1} \OperatorTok{+}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{10}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##  [1]  2  3  4  5  6  7  8  9 10 11
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{#is the same operation as }
-
-\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{10}\NormalTok{) }\OperatorTok{+}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{10} \CommentTok{#note the highly useful rep() function}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##  [1]  2  3  4  5  6  7  8  9 10 11
-\end{verbatim}
-
-A related question: what happens if we add two vectors of different
-lengths?
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\DecValTok{1}\OperatorTok{:}\DecValTok{3} \OperatorTok{+}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{15}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##  [1]  2  4  6  5  7  9  8 10 12 11 13 15 14 16 18
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{#is the same as}
-
-\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{) }\OperatorTok{+}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{15}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##  [1]  2  4  6  5  7  9  8 10 12 11 13 15 14 16 18
-\end{verbatim}
-
-This is ``recycling'': R replicates the shorter vector to the same
-length as the longer vector and then adds the two together. While such
-usage is uncommon for other programming languages, it has undeniable
-utility, though one needs to be cautious when implementing this idea.
-
-\subsection{\texorpdfstring{The \texttt{c()}
-operator}{The c() operator}}\label{the-c-operator}
-
-The \texttt{c()} operator stands for ``concatenate'' or according to
-some writers, ``combine''.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{y <-}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{4}
-
-\NormalTok{(y_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{5}\OperatorTok{:}\DecValTok{10}\NormalTok{, y)) }\CommentTok{#concatenate}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##  [1]  5  6  7  8  9 10  1  2  3  4
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{(y_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\NormalTok{y_}\DecValTok{2}\NormalTok{[}\KeywordTok{c}\NormalTok{(}\DecValTok{3}\OperatorTok{:}\DecValTok{7}\NormalTok{)] )}\CommentTok{#note the square brackets}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1]  7  8  9 10  1
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{(y_}\DecValTok{4}\NormalTok{ <-}\StringTok{ }\NormalTok{y_}\DecValTok{2}\NormalTok{[}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{4}\NormalTok{)]) }\CommentTok{#note the - sign}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1]  6  7  9 10  1  2  3  4
-\end{verbatim}
-
 \section{Pipes}\label{pipes}
 
 Consider the following problem: given a vector, we need to take its
@@ -412,6 +303,241 @@ Pipes are very powerful when expressing a sequence of operations. The
 pipe, \texttt{\%\textgreater{}\%} comes from the \texttt{magrittr}
 package but the tidyverse loads it automatically.
 
+\section{Data-types in R: Some
+Examples}\label{data-types-in-r-some-examples}
+
+\subsection{Vectors}\label{vectors}
+
+There are two main types of vectors in R: atomic and non-atomic. Atomic
+vectors have components of the same type, say double, or integer or
+logical etc. These are also referred to as ``numeric'' vectors. By
+default all vectors in R are considered column-vectors.
+
+Non-atomic vectors (including ``lists'') can contain heterogenous
+components.
+
+\subsubsection{Recycling}\label{recycling}
+
+There are no built-in scalars in R. Scalars are implemented as vectors
+of length 1. Most functions in R, hence, are vectorized---they take
+vector arguments and operate on it component-wise. For example, for the
+vector \texttt{x\ \textless{}-\ 1:100}, the function \texttt{sin(x)}
+produces each component's sine, i.e., \texttt{sin(1):sin(100)}.
+
+When we mix scalars and vectors, the scalars are automatically
+replicated to be the same size as the vector. For example:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{1} \OperatorTok{+}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{10}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  2  3  4  5  6  7  8  9 10 11
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#is the same operation as }
+
+\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{10}\NormalTok{) }\OperatorTok{+}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{10} \CommentTok{#note the highly useful rep() function}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  2  3  4  5  6  7  8  9 10 11
+\end{verbatim}
+
+A related question: what happens if we add two vectors of different
+lengths?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{1}\OperatorTok{:}\DecValTok{3} \OperatorTok{+}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{15}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  2  4  6  5  7  9  8 10 12 11 13 15 14 16 18
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#is the same as}
+
+\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{, }\DecValTok{5}\NormalTok{) }\OperatorTok{+}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{15}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  2  4  6  5  7  9  8 10 12 11 13 15 14 16 18
+\end{verbatim}
+
+This is ``recycling'': R replicates the shorter vector to the same
+length as the longer vector and then adds the two together. While such
+usage is uncommon for other programming languages, it has undeniable
+utility, though one needs to be cautious when implementing this idea.
+
+\subsubsection{Note}\label{note}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  While recycling works for vectors, it doesn't do so for matrices or
+  other rectangular data-types.
+\end{enumerate}
+
+\subsubsection{\texorpdfstring{The \texttt{c()}
+operator}{The c() operator}}\label{the-c-operator}
+
+The \texttt{c()} operator stands for ``concatenate'' or according to
+some writers, ``combine''.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{y <-}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{4}
+
+\NormalTok{(y_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{5}\OperatorTok{:}\DecValTok{10}\NormalTok{, y)) }\CommentTok{#concatenate}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  5  6  7  8  9 10  1  2  3  4
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(y_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\NormalTok{y_}\DecValTok{2}\NormalTok{[}\KeywordTok{c}\NormalTok{(}\DecValTok{3}\OperatorTok{:}\DecValTok{7}\NormalTok{)] )}\CommentTok{#note the square brackets}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  7  8  9 10  1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(y_}\DecValTok{4}\NormalTok{ <-}\StringTok{ }\NormalTok{y_}\DecValTok{2}\NormalTok{[}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{4}\NormalTok{)]) }\CommentTok{#note the - sign}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1]  6  7  9 10  1  2  3  4
+\end{verbatim}
+
+\subsection{Arrays and Matrices}\label{arrays-and-matrices}
+
+Matrices are two-dimensional data-types with columns and rows as the two
+dimensions. Arrays are data-types that can contain more than two
+dimensions as well (height, say in addition to rows and columns). These
+may or may not have special named attributes such as column names or row
+names.
+
+Matrices can be constructed from component vectors by the usage of
+commands \texttt{cbind()} and \texttt{rbind()}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{c_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{, }\DecValTok{9}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{12}\NormalTok{)}
+\NormalTok{c_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{10}\NormalTok{)}
+
+\NormalTok{(mat_c <-}\StringTok{ }\KeywordTok{cbind}\NormalTok{(c_}\DecValTok{1}\NormalTok{, c_}\DecValTok{2}\NormalTok{)) }\CommentTok{#column-bind}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      c_1 c_2
+## [1,]   4  10
+## [2,]   9   3
+## [3,]  10   1
+## [4,]  12  10
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(mat_r <-}\StringTok{ }\KeywordTok{rbind}\NormalTok{(c_}\DecValTok{1}\NormalTok{, c_}\DecValTok{2}\NormalTok{)) }\CommentTok{#row-bind}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     [,1] [,2] [,3] [,4]
+## c_1    4    9   10   12
+## c_2   10    3    1   10
+\end{verbatim}
+
+\subsection{Dataframes}\label{dataframes}
+
+Dataframes are data-types with a collection of vectors of the same
+length which may be of different types. Each column (variable) has a
+column-name that can be used to access the whole vector. Additionally,
+the column can be extracted by appending to the dataframe, the
+\texttt{\$} sign followed by the column-name. The full set of names can
+be extracted by the command \texttt{names()}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{a =} \KeywordTok{runif}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{), }
+                 \DataTypeTok{b =} \KeywordTok{rnorm}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{),}
+                 \DataTypeTok{c =} \DecValTok{11}\OperatorTok{:}\DecValTok{20}
+\NormalTok{                 )}
+
+\NormalTok{df}\OperatorTok{$}\NormalTok{a }\OperatorTok{%>%}\StringTok{ }\KeywordTok{head}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9614592 0.9158706 0.8321787 0.1612111 0.2023648 0.4352416
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{names}\NormalTok{(df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "a" "b" "c"
+\end{verbatim}
+
+\subsubsection{Subsetting Dataframes}\label{subsetting-dataframes}
+
+If we need only part of a dataframe, we can refer to the relevant
+indices in square brackets appended to the name of the dataframe.
+Leaving an index blank includes all entries.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[, }\DecValTok{1}\NormalTok{] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{head}\NormalTok{() }\CommentTok{#column 1}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.9614592 0.9158706 0.8321787 0.1612111 0.2023648 0.4352416
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[}\DecValTok{3}\NormalTok{, ] }\OperatorTok{%>%}\StringTok{ }\KeywordTok{head}\NormalTok{() }\CommentTok{#row 3}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           a        b  c
+## 3 0.8321787 2.206687 13
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\StringTok{"c"}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 11 12
+\end{verbatim}
+
 \section{Functions}\label{functions}
 
 Functions automate common tasks succinctly. According to Hadley Wickham,
@@ -452,7 +578,7 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1] -0.1940707 -0.2795063 -0.4637535 -0.5994307  1.0164079  0.8276887
+## [1]  0.4755169 -0.5812264  1.8950885 -0.7009385  0.4171631  0.7818750
 \end{verbatim}
 
 \begin{Shaded}
@@ -462,7 +588,7 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1] -0.2217160 -1.2597919 -0.2057303  1.1201297 -1.7149043  2.1334339
+## [1]  0.36904049  0.52473282 -1.06526400 -0.02148587 -0.28236561 -0.77917243
 \end{verbatim}
 
 \begin{Shaded}
@@ -472,7 +598,7 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1]  0.1422560 -0.2089479  0.7960424  0.3972417  1.0497377  0.9905420
+## [1] -1.90869015 -1.44342007 -0.24974682 -0.02721761 -1.10288651 -0.34579283
 \end{verbatim}
 
 \section{Directory Management}\label{directory-management}

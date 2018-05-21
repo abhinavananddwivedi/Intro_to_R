@@ -14,7 +14,7 @@ data_gapminder <- gapminder::gapminder
 
 ## ----plot_eur, eval=T, echo=T, message=F, warning=T, include=T-----------
 
-data_eur_2007 <- data_gapminder %>% 
+data_eur_2007 <- data_gapminder %>% #what is this funny sign?
   dplyr::filter(year == 2007) %>% #isolates variables for year 2007
   dplyr::filter(continent == "Europe") 
 
