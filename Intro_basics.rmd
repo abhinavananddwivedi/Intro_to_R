@@ -6,7 +6,7 @@ output:
   pdf_document:
     keep_tex: true
 
-  
+fontsize: 11pt
 documentclass: article
 geometry: margin = 1.75in
 

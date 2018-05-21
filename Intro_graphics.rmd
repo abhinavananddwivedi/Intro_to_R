@@ -8,6 +8,7 @@ output:
   
 documentclass: article
 geometry: margin = 1.75in
+fontsize: 11pt
 
 linkcolor: blue
 urlcolor: red
