@@ -149,6 +149,23 @@ commands below.
   console.
 \end{enumerate}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\KeywordTok{library}\NormalTok{(rmarkdown)}
+\KeywordTok{library}\NormalTok{(knitr)}
+\KeywordTok{library}\NormalTok{(xml2)}
+\KeywordTok{library}\NormalTok{(gapminder)}
+
+\NormalTok{knitr}\OperatorTok{::}\NormalTok{opts_chunk}\OperatorTok{$}\KeywordTok{set}\NormalTok{(}\DataTypeTok{echo =}\NormalTok{ T, }
+                      \DataTypeTok{warning =}\NormalTok{ T, }
+                      \DataTypeTok{message =}\NormalTok{ F, }
+                      \DataTypeTok{eval =}\NormalTok{ T, }
+                      \DataTypeTok{include =}\NormalTok{ T}
+\NormalTok{                      )}
+\end{Highlighting}
+\end{Shaded}
+
 The most basic way in which one can use R is as a calculator:
 
 \begin{Shaded}
@@ -488,7 +505,7 @@ be extracted by the command \texttt{names()}
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.9614592 0.9158706 0.8321787 0.1612111 0.2023648 0.4352416
+## [1] 0.2383070 0.8742294 0.7648815 0.1924350 0.3391544 0.2280208
 \end{verbatim}
 
 \begin{Shaded}
@@ -514,7 +531,7 @@ Leaving an index blank includes all entries.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.9614592 0.9158706 0.8321787 0.1612111 0.2023648 0.4352416
+## [1] 0.2383070 0.8742294 0.7648815 0.1924350 0.3391544 0.2280208
 \end{verbatim}
 
 \begin{Shaded}
@@ -525,7 +542,7 @@ Leaving an index blank includes all entries.
 
 \begin{verbatim}
 ##           a        b  c
-## 3 0.8321787 2.206687 13
+## 3 0.7648815 -1.15465 13
 \end{verbatim}
 
 \begin{Shaded}
@@ -578,7 +595,7 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1]  0.4755169 -0.5812264  1.8950885 -0.7009385  0.4171631  0.7818750
+## [1] -0.3545056 -1.0754351 -1.2375120 -0.5187318  0.3061452  0.5431074
 \end{verbatim}
 
 \begin{Shaded}
@@ -588,7 +605,7 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1]  0.36904049  0.52473282 -1.06526400 -0.02148587 -0.28236561 -0.77917243
+## [1]  0.0532151 -1.4275966  0.5114295 -1.1154865 -0.7480042 -1.9760660
 \end{verbatim}
 
 \begin{Shaded}
@@ -598,7 +615,7 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1] -1.90869015 -1.44342007 -0.24974682 -0.02721761 -1.10288651 -0.34579283
+## [1] -0.41149993 -0.22917019  0.04471329  0.08392352 -1.67280787 -0.53303801
 \end{verbatim}
 
 \section{Directory Management}\label{directory-management}

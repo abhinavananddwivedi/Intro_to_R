@@ -1,0 +1,209 @@
+---
+title: "Introduction to Data Reading and Tidying"
+author: Abhinav Anand
+
+output:
+  pdf_document:
+    keep_tex: true
+
+fontsize: 12pt
+documentclass: article
+geometry: margin = 1.5in
+
+linkcolor: blue
+urlcolor: red
+citecolor: magenta
+
+citation_package: natbib
+bibliography: Working_Paper.bib
+
+header-includes:
+   - \linespread{1.2}
+
+
+---
+
+```{r setup, eval=T, message=FALSE, warning=T, include=FALSE, echo=F}
+
+library(tidyverse)
+library(rmarkdown)
+library(knitr)
+library(xml2)
+library(gapminder)
+
+knitr::opts_chunk$set(echo = T, 
+                      warning = T, 
+                      message = F, 
+                      eval = T, 
+                      include = T
+                      )
+```
+
+# Setup
+
+The following discussion assumes we have donwloaded R and RStudio. The packages `readr` and `tidyr` need to be installed prior to running the commands below. They are included in the `tidyverse`
+
+1. For downloading R, visit <https://cran.r-project.org/>
+2. For downloading RStudio visit <https://www.rstudio.com/>
+
+# Reading and Parsing Data Files
+
+The following discussion assumes that all data files referenced are in the same folder as the R codes.
+
+## Reading Plain-Text Files (`.csv`, `.tsv` etc.)
+
+We will be working with the following set of files to illustrate the ideas regarding reading real-life, empirical data files.
+
+```{r data_files}
+
+file_fin_risk <- "FMC_T4_read_file_fin_risk.csv"
+file_gdppc <- "FMC_T4_read_file_gdppc.csv"
+file_US_corp_spread <- "FMC_T4_read_file_US_corp_spread.csv"
+
+
+
+```
+
+While we may read files in formats such as `.xls`, `.xlsx` etc. ("excel files") in R by using the package `readxl`, it is advised by many writers to convert such files into plain-text `.csv` format (comma separated format) and then open them by the `readr` package functions.
+
+### `read_csv()`
+
+`read_csv()` reads `.csv` files. For semicolon separated files, `read_csv2()` function is used. 
+
+```{r data_read, message=T}
+
+(fin_risk <- readr::read_csv(file_fin_risk)) #file path
+
+
+```
+
+`read_csv` uses the first row as the column names of data. If however, we know this to not be true (sometimes there are a few lines of metadata at the top of the file) we can instruct `read_csv` to refrain from such behavior.
+
+```{r data_read_skip}
+
+(US_corp_spread <- readr::read_csv(file_US_corp_spread))
+
+(US_corp_spread_skip <- readr::read_csv(file_US_corp_spread, 
+                                        skip = 10)
+  )
+
+```
+
+### Notes
+
+1. When the data file does not have column names we can use `col_names = FALSE` to tell `read_csv()` not to treat the first row as headings, and instead label them sequentially from $X1$ to $Xn$.
+
+2. While base R has the classic `read.csv()` function to read `.csv` files, usage of `read_csv()` is encouraged since the latter is said to be around 10 times faster than the former. This is critical when file sizes become large. Additionally, the files are read as tibbles and hence retain their readability, flexibility and reproduceability. 
+
+3. Excel files can be read with `readxl()`. Files in formats foreign to R, such as Stata files (`.dta`) can be read using the tidyverse package `haven`.
+
+4. R can also write dataframes into a `.csv` file by use of the command `write_csv()`.
+
+
+# Tidying Data
+
+```{r data_read_alt, message=T}
+
+(gdppc <- readr::read_csv(file_gdppc)) #which format?
+
+head(fin_risk) #which format?
+
+```
+
+## The Tidy Format
+
+The tidy format has three characteristics:
+
+1. Each variable is a column
+2. Each observation is a row
+3. Each value is a cell
+
+`fin_risk` is a tidy dataset, `gdppc` is not.
+
+Not all formats of data are equally good for analysis. For the tidyverse, the best format to work with is the "tidy" format. `dplyr`, `ggplot2` and all the other packages in the tidyverse are designed to work best with tidy data.
+
+```{r data_tidy_read}
+
+(fin_risk_tidy <- fin_risk %>%
+  dplyr::rename(risk_foreign = 
+                  `Risk Points for Foreign Debt as a % of GDP`) %>%
+  dplyr::rename(risk_exchange = 
+                  `Risk Points for Exchange Rate Stability`) %>%
+  dplyr::rename(risk_debt = 
+                  `Risk Points for Debt Service as a % of XGS`) %>%
+  dplyr::rename(risk_CA = 
+                  `Risk Points for Current Account as % of XGS`) %>%
+  dplyr::rename(risk_liq = 
+                  `Risk Points for International Liquidity`) %>%
+  dplyr::rename(risk_agg_fin = `Aggregate Financial Risk`)
+ )
+
+(fin_risk_tidy_summ <- fin_risk_tidy %>%
+    dplyr::group_by(Year) %>%
+    dplyr::summarise(risk_agg_min = 
+                       min(risk_agg_fin, na.rm = T),
+                     risk_agg_max = 
+                       max(risk_agg_fin, na.rm = T),
+                     risk_agg_med = 
+                       median(risk_agg_fin, na.rm = T),
+                     risk_agg_mean = 
+                       mean(risk_agg_fin, na.rm = T),
+                     risk_agg_std = 
+                       sd(risk_agg_fin, na.rm = T),
+                     risk_agg_iqr =
+                       IQR(risk_agg_fin, na.rm = T)
+                     )
+    
+)
+
+ggplot(data = filter(fin_risk_tidy, 
+                     Country %in% c("United Kingdom",
+                                  "United States",
+                                  "China",
+                                  "India")
+                     ),
+       mapping = aes(x = Year, 
+                     y = risk_agg_fin,
+                     color = Country)) +
+  geom_point() +
+  geom_line(mapping = aes(linetype = Country))
+
+
+```
+
+### Gathering
+
+This is used to "gather" data from the wide format, to the long format.
+
+```{r data_gather}
+
+gdppc %>% head(.)
+
+col_yr_1 <- "1960 [YR1960]"
+col_yr_end <- "2016 [YR2016]"
+
+(gdppc_tidy <- gdppc %>%
+    dplyr::select(-c(`Series Name`, #why backticks ``?
+                     `Series Code`,
+                     `Country Code`
+                     )
+                  ) %>%
+    dplyr::rename(Country = `Country Name`) %>%
+    tidyr::gather(col_yr_1:col_yr_end,
+                  key = "Year",
+                  value = "GDP_per_capita"
+                  ) %>%
+    dplyr::arrange(Country)
+
+  )
+
+
+```
+
+
+
+### Spreading
+
+
+### Joining
+

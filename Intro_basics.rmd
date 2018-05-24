@@ -23,7 +23,15 @@ header-includes:
 
 ---
 
-```{r setup, eval=T, message=FALSE, warning=T, include=FALSE, echo=F}
+# Setup
+
+The following discussion assumes you have donwloaded R and RStudio. The package `gapminder` needs to be installed prior to running the commands below.
+
+1. For downloading R, visit <https://cran.r-project.org/>
+2. For downloading RStudio visit <https://www.rstudio.com/>
+3. To install, type `install.packages("gapminder")` in the RStudio console.
+
+```{r setup, eval=T, message=FALSE, warning=T, include=T, echo=T}
 
 library(tidyverse)
 library(rmarkdown)
@@ -39,13 +47,7 @@ knitr::opts_chunk$set(echo = T,
                       )
 ```
 
-# Setup
 
-The following discussion assumes you have donwloaded R and RStudio. The package `gapminder` needs to be installed prior to running the commands below.
-
-1. For downloading R, visit <https://cran.r-project.org/>
-2. For downloading RStudio visit <https://www.rstudio.com/>
-3. To install, type `install.packages("gapminder")` in the RStudio console.
 
 The most basic way in which one can use R is as a calculator:
 
@@ -239,6 +241,7 @@ df[c(1,2), "c"]
 
 ```
 
+SUBSETTING WITH LOGICAL INDICES
 
 # Functions
 
