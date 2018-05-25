@@ -88,7 +88,7 @@ plot_CIFG_mult_geom_2 <- ggplot(data = data_CIFG,
 (plot_CIFG_pop_Ind <- ggplot(data = filter(data_CIFG, #why no +?
                                            country == "India"), 
                          mapping = aes(x = year, y = pop)) +
-  geom_point(mapping = aes(color = country)) +
+  geom_point() +
   geom_smooth(method = "lm", se = F) #se = "standard errors"
  )
 
@@ -98,7 +98,7 @@ plot_CIFG_mult_geom_2 <- ggplot(data = data_CIFG,
 (plot_CIFG_pop_China <- ggplot(data = filter(data_CIFG, 
                                              country == "China"), 
                          mapping = aes(x = year, y = pop)) +
-  geom_point(mapping = aes(color = country)) +
+  geom_point() +
   geom_smooth(method = "lm") #se = T by default
  )
 

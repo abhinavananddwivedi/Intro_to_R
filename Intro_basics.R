@@ -1,4 +1,4 @@
-## ----setup, eval=T, message=FALSE, warning=T, include=FALSE, echo=F------
+## ----setup, eval=T, message=FALSE, warning=T, include=T, echo=T----------
 
 library(tidyverse)
 library(rmarkdown)
@@ -131,6 +131,19 @@ df[, 1] %>% head() #column 1
 df[3, ] %>% head() #row 3
 
 df[c(1,2), "c"]
+
+
+## ----data_frame_subset_log-----------------------------------------------
+
+df[df$b < 0.5, ] #only those rows whose column b has values < 0.5
+
+
+
+## ----data_frame_subset_assgn---------------------------------------------
+
+df[df$c >= 14, "a"] <- NA
+
+df
 
 
 ## ----function_0----------------------------------------------------------
