@@ -8,7 +8,7 @@ output:
   
 documentclass: article
 geometry: margin = 1.5in
-fontsize: 12pt
+fontsize: 11pt
 
 linkcolor: blue
 urlcolor: red
@@ -18,7 +18,7 @@ citation_package: natbib
 bibliography: Working_Paper.bib
 
 header-includes:
-   - \linespread{1.2}
+   - \linespread{1.25}
 
 
 ---
@@ -35,12 +35,8 @@ library(gapminder)
 
 # Setup
 
-The following discussion assumes you have donwloaded R and RStudio. Additionally, the package suite
-`tidyverse()` which includes the package `ggplot2` needs to be included.
-
-1. For downloading R, visit <https://cran.r-project.org/>
-2. For downloading RStudio visit <https://www.rstudio.com/>
-3. For downloading `ggplot2`, type `install.packages("ggplot2")` or equivalently for `tidyverse()`
+The package suite `tidyverse` which includes the package `ggplot2` needs to be included.
+For installing `ggplot2`, type `install.packages("ggplot2")` or equivalently for `tidyverse`,
 type `install.packages("tidyverse")`
 
 # Introduction to ggplot
@@ -202,7 +198,7 @@ Fitting a line to a set of observations is linear smoothing. Fitting a polynomia
 (plot_CIFG_pop_Ind <- ggplot(data = filter(data_CIFG, #why no +?
                                            country == "India"), 
                          mapping = aes(x = year, y = pop)) +
-  geom_point(mapping = aes(color = country)) +
+  geom_point() +
   geom_smooth(method = "lm", se = F) #se = "standard errors"
  )
 
@@ -215,7 +211,7 @@ Fitting a line to a set of observations is linear smoothing. Fitting a polynomia
 (plot_CIFG_pop_China <- ggplot(data = filter(data_CIFG, 
                                              country == "China"), 
                          mapping = aes(x = year, y = pop)) +
-  geom_point(mapping = aes(color = country)) +
+  geom_point() +
   geom_smooth(method = "lm") #se = T by default
  )
 

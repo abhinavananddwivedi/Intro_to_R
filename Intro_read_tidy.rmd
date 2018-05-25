@@ -6,7 +6,7 @@ output:
   pdf_document:
     keep_tex: true
 
-fontsize: 12pt
+fontsize: 11pt
 documentclass: article
 geometry: margin = 1.5in
 
@@ -18,7 +18,7 @@ citation_package: natbib
 bibliography: Working_Paper.bib
 
 header-includes:
-   - \linespread{1.2}
+   - \linespread{1.25}
 
 
 ---
@@ -41,10 +41,8 @@ knitr::opts_chunk$set(echo = T,
 
 # Setup
 
-The following discussion assumes we have donwloaded R and RStudio. The packages `readr` and `tidyr` need to be installed prior to running the commands below. They are included in the `tidyverse`
+The packages `readr` and `tidyr` need to be installed prior to running the commands below. They are included in `tidyverse` by default. To install, type in the console `install.packages(c("readr", "tidyr"))`; or equivalently `install.packages("tidyverse")`
 
-1. For downloading R, visit <https://cran.r-project.org/>
-2. For downloading RStudio visit <https://www.rstudio.com/>
 
 # Reading and Parsing Data Files
 
@@ -118,9 +116,9 @@ The tidy format has three characteristics:
 2. Each observation is a row
 3. Each value is a cell
 
-`fin_risk` is a tidy dataset, `gdppc` is not.
-
 Not all formats of data are equally good for analysis. For the tidyverse, the best format to work with is the "tidy" format. `dplyr`, `ggplot2` and all the other packages in the tidyverse are designed to work best with tidy data.
+
+`fin_risk` is a tidy dataset, `gdppc` is not.
 
 ```{r data_tidy_read}
 
@@ -173,6 +171,9 @@ ggplot(data = filter(fin_risk_tidy,
 
 ### Gathering
 
+"Gathering" involves moving column names into a "key" column, gathering the column values into a
+single value column.
+
 This is used to "gather" data from the wide format, to the long format.
 
 ```{r data_gather}
@@ -204,6 +205,70 @@ col_yr_end <- "2016 [YR2016]"
 
 ### Spreading
 
+Spreading is the opposite of gathering. It moves the unique values of a key column into the column names, thus "spreading" the column values across new columns.
+
+Below, we spread the variable `fin_risk` which is in the long format, into the wide format.
+
+```{r data_spread}
+
+(fin_risk_foreign <- fin_risk_tidy %>% 
+  dplyr::select(c(Country, Year, risk_foreign))
+ )
+
+(fin_risk_spread <- fin_risk_foreign %>%
+  tidyr::spread(key = Country, 
+                value = risk_foreign
+                )
+  )
+
+```
+
+Each column now is the aggregate foreign financial risk of a country. This is the wide format.
 
 ### Joining
 
+`fin_risk_foreign` and `gdppc_tidy` are both tidy datasets containing information about countries' foreign financial risk variables and GDP per capita respectively. What if we wish to merge the two datasets into one, so that we have countries' risk as well as GDP per capita profiles?
+
+This can be achieved by the so-called "mutating join" family of functions from `dplyr`. There are mainly four types of joins: 
+
+1. `left_join(x, y)` merges `y` using matching values for `x`.
+2. `right_join(x, y)` merges `x` using matching values for `y`.
+3. `inner_join(x, y)` merges only matching rows.
+4. `full_join(x, y)` merges fully, retaining all values.
+
+Missing matches are filled with `NA` values.
+
+```{r data_mutating_joins}
+
+gdppc_tidy$Year <- 1960:2016 #reformatting dates
+
+# Left Joining
+(data_join_left <- dplyr::left_join(fin_risk_foreign, gdppc_tidy, 
+                                   by = c("Country", "Year")
+                                   ) %>%
+    dplyr::arrange(Country)
+  )
+
+# Right Joining
+(data_join_right <- dplyr::right_join(fin_risk_foreign, gdppc_tidy, 
+                                   by = c("Country", "Year")
+                                   ) %>%
+    dplyr::arrange(Country)
+  )
+
+# Inner Joining
+(data_join_inner <- dplyr::inner_join(fin_risk_foreign, gdppc_tidy, 
+                                   by = c("Country", "Year")
+                                   ) %>%
+    dplyr::arrange(Country)
+  )
+
+# Full Joining
+(data_join_full <- dplyr::full_join(fin_risk_foreign, gdppc_tidy, 
+                                   by = c("Year", "Country")
+                                   ) %>%
+    dplyr::arrange(Country)
+  )
+
+
+```

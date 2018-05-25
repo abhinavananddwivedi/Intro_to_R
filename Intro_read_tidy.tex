@@ -1,4 +1,4 @@
-\documentclass[12pt,]{article}
+\documentclass[11pt,]{article}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -126,25 +126,18 @@
   \date{}
   \predate{}\postdate{}
 
-\linespread{1.2}
+\linespread{1.25}
 
 \begin{document}
 \maketitle
 
 \section{Setup}\label{setup}
 
-The following discussion assumes we have donwloaded R and RStudio. The
-packages \texttt{readr} and \texttt{tidyr} need to be installed prior to
-running the commands below. They are included in the \texttt{tidyverse}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  For downloading R, visit \url{https://cran.r-project.org/}
-\item
-  For downloading RStudio visit \url{https://www.rstudio.com/}
-\end{enumerate}
+The packages \texttt{readr} and \texttt{tidyr} need to be installed
+prior to running the commands below. They are included in
+\texttt{tidyverse} by default. To install, type in the console
+\texttt{install.packages(c("readr",\ "tidyr"))}; or equivalently
+\texttt{install.packages("tidyverse")}
 
 \section{Reading and Parsing Data
 Files}\label{reading-and-parsing-data-files}
@@ -406,12 +399,12 @@ The tidy format has three characteristics:
   Each value is a cell
 \end{enumerate}
 
-\texttt{fin\_risk} is a tidy dataset, \texttt{gdppc} is not.
-
 Not all formats of data are equally good for analysis. For the
 tidyverse, the best format to work with is the ``tidy'' format.
 \texttt{dplyr}, \texttt{ggplot2} and all the other packages in the
 tidyverse are designed to work best with tidy data.
+
+\texttt{fin\_risk} is a tidy dataset, \texttt{gdppc} is not.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -507,6 +500,9 @@ tidyverse are designed to work best with tidy data.
 
 \subsubsection{Gathering}\label{gathering}
 
+``Gathering'' involves moving column names into a ``key'' column,
+gathering the column values into a single value column.
+
 This is used to ``gather'' data from the wide format, to the long
 format.
 
@@ -554,7 +550,7 @@ format.
 \NormalTok{col_yr_end <-}\StringTok{ "2016 [YR2016]"}
 
 \NormalTok{(gdppc_tidy <-}\StringTok{ }\NormalTok{gdppc }\OperatorTok{%>%}
-\StringTok{    }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\StringTok{`}\DataTypeTok{Series Name}\StringTok{`}\NormalTok{,}
+\StringTok{    }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(}\OperatorTok{-}\KeywordTok{c}\NormalTok{(}\StringTok{`}\DataTypeTok{Series Name}\StringTok{`}\NormalTok{, }\CommentTok{#why backticks ``?}
                      \StringTok{`}\DataTypeTok{Series Code}\StringTok{`}\NormalTok{,}
                      \StringTok{`}\DataTypeTok{Country Code}\StringTok{`}
 \NormalTok{                     )}
@@ -589,7 +585,233 @@ format.
 
 \subsubsection{Spreading}\label{spreading}
 
+Spreading is the opposite of gathering. It moves the unique values of a
+key column into the column names, thus ``spreading'' the column values
+across new columns.
+
+Below, we spread the variable \texttt{fin\_risk} which is in the long
+format, into the wide format.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(fin_risk_foreign <-}\StringTok{ }\NormalTok{fin_risk_tidy }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{select}\NormalTok{(}\KeywordTok{c}\NormalTok{(Country, Year, risk_foreign))}
+\NormalTok{ )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 4,380 x 3
+##    Country  Year risk_foreign
+##    <chr>   <int>        <dbl>
+##  1 Albania  1984         5.33
+##  2 Albania  1985         6   
+##  3 Albania  1986         6   
+##  4 Albania  1987         6   
+##  5 Albania  1988         6.25
+##  6 Albania  1989         6.54
+##  7 Albania  1990         6.96
+##  8 Albania  1991         6.75
+##  9 Albania  1992         4.58
+## 10 Albania  1993         4   
+## # ... with 4,370 more rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(fin_risk_spread <-}\StringTok{ }\NormalTok{fin_risk_foreign }\OperatorTok{%>%}
+\StringTok{  }\NormalTok{tidyr}\OperatorTok{::}\KeywordTok{spread}\NormalTok{(}\DataTypeTok{key =}\NormalTok{ Country, }
+                \DataTypeTok{value =}\NormalTok{ risk_foreign}
+\NormalTok{                )}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 30 x 147
+##     Year Albania Algeria Angola Argentina Armenia Australia Austria
+##    <int>   <dbl>   <dbl>  <dbl>     <dbl>   <dbl>     <dbl>   <dbl>
+##  1  1984    5.33    5.55   4         1.8       NA      8.52    8.55
+##  2  1985    6       6      4         1.54      NA      8.33    8.5 
+##  3  1986    6       4.83   2.83      2         NA      7.75    8.13
+##  4  1987    6       4.29   2.75      2.92      NA      7.5     8.42
+##  5  1988    6.25    4.58   3         3.33      NA      8       9   
+##  6  1989    6.54    5.5    3.08      3.54      NA      8.5     9   
+##  7  1990    6.96    6.25   3         2.42      NA      8.96    9   
+##  8  1991    6.75    7.13   3         4.79      NA      9       9   
+##  9  1992    4.58    5.96   3.46      6.96      NA      8.88    9.71
+## 10  1993    4       4.5    2.79      6.38      NA      8       9.5 
+## # ... with 20 more rows, and 139 more variables: Azerbaijan <dbl>,
+## #   Bahamas <dbl>, Bahrain <dbl>, Bangladesh <dbl>, Belarus <dbl>,
+## #   Belgium <dbl>, Bolivia <dbl>, Botswana <dbl>, Brazil <dbl>,
+## #   Brunei <dbl>, Bulgaria <dbl>, `Burkina Faso` <dbl>, Cameroon <dbl>,
+## #   Canada <dbl>, Chile <dbl>, China <dbl>, Colombia <dbl>, Congo <dbl>,
+## #   `Congo, DR` <dbl>, `Costa Rica` <dbl>, `Cote d'Ivoire` <dbl>,
+## #   Croatia <dbl>, Cuba <dbl>, Cyprus <dbl>, Czechoslovakia <dbl>, `Czech
+## #   Republic` <dbl>, Denmark <dbl>, `Dominican Republic` <dbl>, `East
+## #   Germany` <dbl>, Ecuador <dbl>, Egypt <dbl>, `El Salvador` <dbl>,
+## #   Estonia <dbl>, Ethiopia <dbl>, Finland <dbl>, France <dbl>,
+## #   Gabon <dbl>, Gambia <dbl>, Germany <dbl>, Ghana <dbl>, Greece <dbl>,
+## #   Guatemala <dbl>, Guinea <dbl>, `Guinea Bissau` <dbl>, Guyana <dbl>,
+## #   Haiti <dbl>, Honduras <dbl>, `Hong Kong` <dbl>, Hungary <dbl>,
+## #   Iceland <dbl>, India <dbl>, Indonesia <dbl>, Iran <dbl>, Iraq <dbl>,
+## #   Ireland <dbl>, Israel <dbl>, Italy <dbl>, Jamaica <dbl>, Japan <dbl>,
+## #   Jordan <dbl>, Kazakhstan <dbl>, Kenya <dbl>, `Korea, DPR` <dbl>,
+## #   Kuwait <dbl>, Latvia <dbl>, Lebanon <dbl>, Liberia <dbl>, Libya <dbl>,
+## #   Lithuania <dbl>, Luxembourg <dbl>, Madagascar <dbl>, Malawi <dbl>,
+## #   Malaysia <dbl>, Mali <dbl>, Malta <dbl>, Mexico <dbl>, Moldova <dbl>,
+## #   Mongolia <dbl>, Morocco <dbl>, Mozambique <dbl>, Myanmar <dbl>,
+## #   Namibia <dbl>, Netherlands <dbl>, `New Caledonia` <dbl>, `New
+## #   Zealand` <dbl>, Nicaragua <dbl>, Niger <dbl>, Nigeria <dbl>,
+## #   Norway <dbl>, Oman <dbl>, Pakistan <dbl>, Panama <dbl>, `Papua New
+## #   Guinea` <dbl>, Paraguay <dbl>, Peru <dbl>, Philippines <dbl>,
+## #   Poland <dbl>, Portugal <dbl>, Qatar <dbl>, Romania <dbl>, ...
+\end{verbatim}
+
+Each column now is the aggregate foreign financial risk of a country.
+This is the wide format.
+
 \subsubsection{Joining}\label{joining}
+
+\texttt{fin\_risk\_foreign} and \texttt{gdppc\_tidy} are both tidy
+datasets containing information about countries' foreign financial risk
+variables and GDP per capita respectively. What if we wish to merge the
+two datasets into one, so that we have countries' risk as well as GDP
+per capita profiles?
+
+This can be achieved by the so-called ``mutating join'' family of
+functions from \texttt{dplyr}. There are mainly four types of joins:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{left\_join(x,\ y)} merges \texttt{y} using matching values for
+  \texttt{x}.
+\item
+  \texttt{right\_join(x,\ y)} merges \texttt{x} using matching values
+  for \texttt{y}.
+\item
+  \texttt{inner\_join(x,\ y)} merges only matching rows.
+\item
+  \texttt{full\_join(x,\ y)} merges fully, retaining all values.
+\end{enumerate}
+
+Missing matches are filled with \texttt{NA} values.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{gdppc_tidy}\OperatorTok{$}\NormalTok{Year <-}\StringTok{ }\DecValTok{1960}\OperatorTok{:}\DecValTok{2016} \CommentTok{#reformatting dates}
+
+\CommentTok{# Left Joining}
+\NormalTok{(data_join_left <-}\StringTok{ }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{left_join}\NormalTok{(fin_risk_foreign, gdppc_tidy, }
+                                   \DataTypeTok{by =} \KeywordTok{c}\NormalTok{(}\StringTok{"Country"}\NormalTok{, }\StringTok{"Year"}\NormalTok{)}
+\NormalTok{                                   ) }\OperatorTok{%>%}
+\StringTok{    }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{arrange}\NormalTok{(Country)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 4,380 x 4
+##    Country  Year risk_foreign GDP_per_capita
+##    <chr>   <int>        <dbl> <chr>         
+##  1 Albania  1984         5.33 662.5200523091
+##  2 Albania  1985         6    662.9147925671
+##  3 Albania  1986         6    719.1572957039
+##  4 Albania  1987         6    699.3842920867
+##  5 Albania  1988         6.25 676.56673252  
+##  6 Albania  1989         6.54 723.4096102379
+##  7 Albania  1990         6.96 639.4638992899
+##  8 Albania  1991         6.75 348.711317787 
+##  9 Albania  1992         4.58 218.4921659026
+## 10 Albania  1993         4    380.5273710843
+## # ... with 4,370 more rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Right Joining}
+\NormalTok{(data_join_right <-}\StringTok{ }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{right_join}\NormalTok{(fin_risk_foreign, gdppc_tidy, }
+                                   \DataTypeTok{by =} \KeywordTok{c}\NormalTok{(}\StringTok{"Country"}\NormalTok{, }\StringTok{"Year"}\NormalTok{)}
+\NormalTok{                                   ) }\OperatorTok{%>%}
+\StringTok{    }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{arrange}\NormalTok{(Country)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 15,048 x 4
+##    Country      Year risk_foreign GDP_per_capita
+##    <chr>       <int>        <dbl> <chr>         
+##  1 Afghanistan  1960           NA 59.7773265084 
+##  2 Afghanistan  1961           NA 59.8781528089 
+##  3 Afghanistan  1962           NA 58.4928738323 
+##  4 Afghanistan  1963           NA 78.7827580363 
+##  5 Afghanistan  1964           NA 82.2084438594 
+##  6 Afghanistan  1965           NA 101.2904712742
+##  7 Afghanistan  1966           NA 137.899361897 
+##  8 Afghanistan  1967           NA 161.3220000885
+##  9 Afghanistan  1968           NA 129.5066538443
+## 10 Afghanistan  1969           NA 129.7985414084
+## # ... with 15,038 more rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Inner Joining}
+\NormalTok{(data_join_inner <-}\StringTok{ }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{inner_join}\NormalTok{(fin_risk_foreign, gdppc_tidy, }
+                                   \DataTypeTok{by =} \KeywordTok{c}\NormalTok{(}\StringTok{"Country"}\NormalTok{, }\StringTok{"Year"}\NormalTok{)}
+\NormalTok{                                   ) }\OperatorTok{%>%}
+\StringTok{    }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{arrange}\NormalTok{(Country)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 3,660 x 4
+##    Country  Year risk_foreign GDP_per_capita
+##    <chr>   <int>        <dbl> <chr>         
+##  1 Albania  1984         5.33 662.5200523091
+##  2 Albania  1985         6    662.9147925671
+##  3 Albania  1986         6    719.1572957039
+##  4 Albania  1987         6    699.3842920867
+##  5 Albania  1988         6.25 676.56673252  
+##  6 Albania  1989         6.54 723.4096102379
+##  7 Albania  1990         6.96 639.4638992899
+##  8 Albania  1991         6.75 348.711317787 
+##  9 Albania  1992         4.58 218.4921659026
+## 10 Albania  1993         4    380.5273710843
+## # ... with 3,650 more rows
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Full Joining}
+\NormalTok{(data_join_full <-}\StringTok{ }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{full_join}\NormalTok{(fin_risk_foreign, gdppc_tidy, }
+                                   \DataTypeTok{by =} \KeywordTok{c}\NormalTok{(}\StringTok{"Year"}\NormalTok{, }\StringTok{"Country"}\NormalTok{)}
+\NormalTok{                                   ) }\OperatorTok{%>%}
+\StringTok{    }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{arrange}\NormalTok{(Country)}
+\NormalTok{  )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 15,768 x 4
+##    Country      Year risk_foreign GDP_per_capita
+##    <chr>       <int>        <dbl> <chr>         
+##  1 Afghanistan  1960           NA 59.7773265084 
+##  2 Afghanistan  1961           NA 59.8781528089 
+##  3 Afghanistan  1962           NA 58.4928738323 
+##  4 Afghanistan  1963           NA 78.7827580363 
+##  5 Afghanistan  1964           NA 82.2084438594 
+##  6 Afghanistan  1965           NA 101.2904712742
+##  7 Afghanistan  1966           NA 137.899361897 
+##  8 Afghanistan  1967           NA 161.3220000885
+##  9 Afghanistan  1968           NA 129.5066538443
+## 10 Afghanistan  1969           NA 129.7985414084
+## # ... with 15,758 more rows
+\end{verbatim}
 
 
 \end{document}

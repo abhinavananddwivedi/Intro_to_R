@@ -6,7 +6,7 @@ output:
   pdf_document:
     keep_tex: true
 
-fontsize: 12pt
+fontsize: 11pt
 documentclass: article
 geometry: margin = 1.5in
 
@@ -18,7 +18,7 @@ citation_package: natbib
 bibliography: Working_Paper.bib
 
 header-includes:
-   - \linespread{1.2}
+   - \linespread{1.25}
 
 
 ---
@@ -44,14 +44,8 @@ knitr::opts_chunk$set(echo = T,
 
 # Setup
 
-The following discussion assumes you have donwloaded R and RStudio. Additionally, the package suite
-`tidyverse()` which includes the package `dplyr` needs to be included. Also, the package `gapminder` needs to be installed prior to running the commands below.
-
-1. For downloading R, visit <https://cran.r-project.org/>
-2. For downloading RStudio visit <https://www.rstudio.com/>
-3. For downloading `dplyr`, type `install.packages("ggplot2")` or equivalently for `tidyverse()`
-type `install.packages("tidyverse")`
-4. To install, type `install.packages("gapminder")` in the RStudio console.
+The package suite `tidyverse()` which includes the package `dplyr` needs to be included. Also, the package `gapminder` needs to be installed prior to running the commands below. For installing `dplyr`, type `install.packages("dplyr")` or equivalently for `tidyverse`,
+type `install.packages("tidyverse")`. To install `gapminder`, type `install.packages("gapminder")` in the RStudio console.
 
 
 ```{r load_gapminder}

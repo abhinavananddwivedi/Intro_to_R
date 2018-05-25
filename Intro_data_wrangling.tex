@@ -1,4 +1,4 @@
-\documentclass[12pt,]{article}
+\documentclass[11pt,]{article}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -126,34 +126,21 @@
   \date{}
   \predate{}\postdate{}
 
-\linespread{1.2}
+\linespread{1.25}
 
 \begin{document}
 \maketitle
 
 \section{Setup}\label{setup}
 
-The following discussion assumes you have donwloaded R and RStudio.
-Additionally, the package suite \texttt{tidyverse()} which includes the
-package \texttt{dplyr} needs to be included. Also, the package
+The package suite \texttt{tidyverse()} which includes the package
+\texttt{dplyr} needs to be included. Also, the package
 \texttt{gapminder} needs to be installed prior to running the commands
-below.
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  For downloading R, visit \url{https://cran.r-project.org/}
-\item
-  For downloading RStudio visit \url{https://www.rstudio.com/}
-\item
-  For downloading \texttt{dplyr}, type
-  \texttt{install.packages("ggplot2")} or equivalently for
-  \texttt{tidyverse()} type \texttt{install.packages("tidyverse")}
-\item
-  To install, type \texttt{install.packages("gapminder")} in the RStudio
-  console.
-\end{enumerate}
+below. For installing \texttt{dplyr}, type
+\texttt{install.packages("dplyr")} or equivalently for
+\texttt{tidyverse}, type \texttt{install.packages("tidyverse")}. To
+install \texttt{gapminder}, type \texttt{install.packages("gapminder")}
+in the RStudio console.
 
 \begin{Shaded}
 \begin{Highlighting}[]

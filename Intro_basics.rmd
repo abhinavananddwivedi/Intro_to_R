@@ -6,7 +6,7 @@ output:
   pdf_document:
     keep_tex: true
 
-fontsize: 12pt
+fontsize: 11pt
 documentclass: article
 geometry: margin = 1.5in
 
@@ -18,18 +18,18 @@ citation_package: natbib
 bibliography: Working_Paper.bib
 
 header-includes:
-   - \linespread{1.2}
+   - \linespread{1.25}
 
 
 ---
 
 # Setup
 
-The following discussion assumes you have donwloaded R and RStudio. The package `gapminder` needs to be installed prior to running the commands below.
+The following discussion assumes we have donwloaded R and RStudio. The package `gapminder` needs to be installed prior to running the commands below.
 
 1. For downloading R, visit <https://cran.r-project.org/>
 2. For downloading RStudio visit <https://www.rstudio.com/>
-3. To install, type `install.packages("gapminder")` in the RStudio console.
+3. To install `gapminder`, type `install.packages("gapminder")` in the RStudio console.
 
 ```{r setup, eval=T, message=FALSE, warning=T, include=T, echo=T}
 
@@ -134,7 +134,7 @@ if(x_3 >= 1)
 
 ```
 
-Pipes are very powerful when expressing a sequence of operations. The pipe, `%>%` comes from the `magrittr` package but the tidyverse loads it automatically.
+Pipes are very powerful when expressing a sequence of operations. The pipe, `%>%` comes from the `magrittr` package but tidyverse loads it automatically.
 
 
 # Data-types in R: Some Examples
@@ -241,7 +241,24 @@ df[c(1,2), "c"]
 
 ```
 
-SUBSETTING WITH LOGICAL INDICES
+**Subsetting with Logical Indices**
+
+```{r data_frame_subset_log}
+
+df[df$b < 0.5, ] #only those rows whose column b has values < 0.5
+
+
+```
+
+**Subsetting and Assignment**
+
+```{r data_frame_subset_assgn}
+
+df[df$c >= 14, "a"] <- NA
+
+df
+
+```
 
 # Functions
 

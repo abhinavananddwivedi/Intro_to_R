@@ -1,4 +1,4 @@
-\documentclass[12pt,]{article}
+\documentclass[11pt,]{article}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -126,14 +126,14 @@
   \date{}
   \predate{}\postdate{}
 
-\linespread{1.2}
+\linespread{1.25}
 
 \begin{document}
 \maketitle
 
 \section{Setup}\label{setup}
 
-The following discussion assumes you have donwloaded R and RStudio. The
+The following discussion assumes we have donwloaded R and RStudio. The
 package \texttt{gapminder} needs to be installed prior to running the
 commands below.
 
@@ -145,8 +145,8 @@ commands below.
 \item
   For downloading RStudio visit \url{https://www.rstudio.com/}
 \item
-  To install, type \texttt{install.packages("gapminder")} in the RStudio
-  console.
+  To install \texttt{gapminder}, type
+  \texttt{install.packages("gapminder")} in the RStudio console.
 \end{enumerate}
 
 \begin{Shaded}
@@ -318,7 +318,7 @@ it with the word ``then''.
 
 Pipes are very powerful when expressing a sequence of operations. The
 pipe, \texttt{\%\textgreater{}\%} comes from the \texttt{magrittr}
-package but the tidyverse loads it automatically.
+package but tidyverse loads it automatically.
 
 \section{Data-types in R: Some
 Examples}\label{data-types-in-r-some-examples}
@@ -505,7 +505,7 @@ be extracted by the command \texttt{names()}
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.2383070 0.8742294 0.7648815 0.1924350 0.3391544 0.2280208
+## [1] 0.07334647 0.30922432 0.52732537 0.08402270 0.02421654 0.42104029
 \end{verbatim}
 
 \begin{Shaded}
@@ -531,7 +531,7 @@ Leaving an index blank includes all entries.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.2383070 0.8742294 0.7648815 0.1924350 0.3391544 0.2280208
+## [1] 0.07334647 0.30922432 0.52732537 0.08402270 0.02421654 0.42104029
 \end{verbatim}
 
 \begin{Shaded}
@@ -541,8 +541,8 @@ Leaving an index blank includes all entries.
 \end{Shaded}
 
 \begin{verbatim}
-##           a        b  c
-## 3 0.7648815 -1.15465 13
+##           a          b  c
+## 3 0.5273254 -0.5366784 13
 \end{verbatim}
 
 \begin{Shaded}
@@ -553,6 +553,50 @@ Leaving an index blank includes all entries.
 
 \begin{verbatim}
 ## [1] 11 12
+\end{verbatim}
+
+\textbf{Subsetting with Logical Indices}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[df}\OperatorTok{$}\NormalTok{b }\OperatorTok{<}\StringTok{ }\FloatTok{0.5}\NormalTok{, ] }\CommentTok{#only those rows whose column b has values < 0.5}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##            a          b  c
+## 1 0.07334647  0.2891909 11
+## 2 0.30922432 -0.1983550 12
+## 3 0.52732537 -0.5366784 13
+## 4 0.08402270 -1.8201355 14
+## 5 0.02421654 -0.6866562 15
+## 6 0.42104029 -1.1016686 16
+## 8 0.79314242 -0.1150933 18
+## 9 0.11660511  0.4335739 19
+\end{verbatim}
+
+\textbf{Subsetting and Assignment}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df[df}\OperatorTok{$}\NormalTok{c }\OperatorTok{>=}\StringTok{ }\DecValTok{14}\NormalTok{, }\StringTok{"a"}\NormalTok{] <-}\StringTok{ }\OtherTok{NA}
+
+\NormalTok{df}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##             a          b  c
+## 1  0.07334647  0.2891909 11
+## 2  0.30922432 -0.1983550 12
+## 3  0.52732537 -0.5366784 13
+## 4          NA -1.8201355 14
+## 5          NA -0.6866562 15
+## 6          NA -1.1016686 16
+## 7          NA  0.8073319 17
+## 8          NA -0.1150933 18
+## 9          NA  0.4335739 19
+## 10         NA  1.5956745 20
 \end{verbatim}
 
 \section{Functions}\label{functions}
@@ -595,7 +639,7 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1] -0.3545056 -1.0754351 -1.2375120 -0.5187318  0.3061452  0.5431074
+## [1] -0.7241235 -1.9404914 -0.4513705  1.3123735  1.4099941 -0.2813271
 \end{verbatim}
 
 \begin{Shaded}
@@ -605,7 +649,7 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1]  0.0532151 -1.4275966  0.5114295 -1.1154865 -0.7480042 -1.9760660
+## [1]  0.38316849 -0.04957717  1.01885476 -2.28554036 -0.11806042 -0.28770394
 \end{verbatim}
 
 \begin{Shaded}
@@ -615,7 +659,7 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1] -0.41149993 -0.22917019  0.04471329  0.08392352 -1.67280787 -0.53303801
+## [1]  1.5747761 -0.7079810 -0.2185073  2.6911674 -1.4895251  0.4935895
 \end{verbatim}
 
 \section{Directory Management}\label{directory-management}
