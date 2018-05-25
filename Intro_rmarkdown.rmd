@@ -1,0 +1,137 @@
+---
+title: "Introduction to RMarkdown"
+author: Abhinav Anand
+
+output:
+  pdf_document:
+    keep_tex: true
+
+fontsize: 11pt
+documentclass: article
+geometry: margin = 1.5in
+
+linkcolor: blue
+urlcolor: red
+citecolor: magenta
+
+citation_package: natbib
+bibliography: Working_Paper.bib
+
+header-includes:
+   - \linespread{1.25}
+
+
+---
+
+```{r setup, eval=T, message=FALSE, warning=T, include=FALSE, echo=F}
+
+library(tidyverse)
+library(rmarkdown)
+library(knitr)
+library(xml2)
+library(gapminder)
+
+knitr::opts_chunk$set(echo = T, 
+                      warning = T, 
+                      message = F, 
+                      eval = T, 
+                      include = T
+                      )
+```
+
+# Setup
+
+The packages `rmarkdown` and `knitr` need to be installed prior to running the commands below. To install, type in the console `install.packages(c("knitr", "rmarkdown"))`.
+
+# Background
+
+A text processor such as MS Word uses a "What-You-See-Is-What-You-Get" (WYSIWYG) editor. We see the output of the "rendered" text directly. However, to exercise finer control over the rendering, a "markup" language is better. Latex and HTML are examples of markup languages: they contain ordinary text, as well as special commands that govern the final rendering of the text. Markdown is an especially convenient markup language that preserves the finer aspects of text formatting without being too hard to read.
+
+There are many programs for rendering documents written in Markdown into documents in the .html, .pdf and .docx formats (among many others). R Markdown extends Markdown to incorporate text formatting, mathematics, figures, tables; as well as R code and its output directly into the rendered document.
+
+Behind the scenes, when we "knit" the file, R Markdown sends the `.rmd` file to `knitr()` which executes all code chunks and creates a new markdown file (extension `.md`) which includes both the code and its output. This file is then used by `pandoc` (essentially a free and open source document converter) to convert to the desired format. This two-step workflow can help to create a very wide range of formatting options for eventual publishing.
+
+# The Main Components of RMarkdown
+
+Each RMarkdown document has three main components---header, text; and code chunks.
+
+## The YAML Header
+
+The current file's header includes the following lines:
+
+```{r YAML, eval=F}
+
+---
+title: "Introduction to RMarkdown"
+author: Abhinav Anand
+
+output:
+  pdf_document:
+    keep_tex: true
+
+fontsize: 11pt
+documentclass: article
+geometry: margin = 1.5in
+
+linkcolor: blue
+urlcolor: red
+citecolor: magenta
+
+citation_package: natbib
+bibliography: Working_Paper.bib
+
+header-includes:
+   - \linespread{1.25}
+
+
+---
+```
+
+## Text
+
+
+
+## Code Chunks
+
+### Literate Programming and Reproducibility 
+
+
+### Formatting
+To insert a break between paragraphs, include a single completely blank line.
+
+To force a line break, put two blank
+spaces at the end of a line.
+
+### Headers
+`#`, `##`, `###`
+
+### Italics, Boldface
+
+
+### Backticks
+
+### Bullet/Numbered Lists
+
+### Title etc.
+
+### Links and Images
+
+
+### Including Code Chunks
+
+One of the most common options turns off printing out the code, but leaves the results alone: ```{r, echo=FALSE}
+
+Another runs the code, but includes neither the text of the code nor its output. ```{r, include=FALSE} This might seem pointless, but it can be useful for code chunks which do set-up like loading data files, or initial model estimates, etc.
+
+Another option prints the code in the document, but does not run it: ```{r, eval=FALSE} This is useful if you want to talk about the (nicely formatted) code.
+
+### Tables
+
+The default print-out of matrices, tables, etc. from R Markdown is frankly ugly. The knitr package contains a very basic command, kable, which will format an array or data frame more nicely for display.
+
+### Math
+
+Just use latex style.
+
+
+### Bibliography and Citations
