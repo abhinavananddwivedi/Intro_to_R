@@ -73,6 +73,7 @@
 \newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
 \newcommand{\NormalTok}[1]{#1}
+\usepackage{longtable,booktabs}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -123,8 +124,9 @@
   \author{Abhinav Anand}
   \preauthor{\centering\large\emph}
   \postauthor{\par}
-  \date{}
-  \predate{}\postdate{}
+  \predate{\centering\large\emph}
+  \postdate{\par}
+  \date{Today}
 
 \linespread{1.25}
 
@@ -162,13 +164,32 @@ both the code and its output. This file is then used by \texttt{pandoc}
 the desired format. This two-step workflow can help to create a very
 wide range of formatting options for eventual publishing.
 
+\subsection{Literate Programming and
+Reproducibility}\label{literate-programming-and-reproducibility}
+
+The objective for which RMarkdown proves most useful is its potential
+for literate programming---a programming concept due to the famous
+computer scientist Donald Knuth (also the father of TeX)---in which the
+code and its explanation in a natural language occur in the same
+document.
+
+RMarkdown provides us with a way of including both code snippets and
+marked up text to \emph{build} a document that contains codes, its
+output as well as documentation. This also helps make research both
+\emph{replicable} and \emph{reproducible} since the \texttt{.rmd} file
+with the code can be sourced by readers themselves. The study can be
+replicated with new data using the codes in the \texttt{.rmd} file while
+the study can be reproduced by simply re-sourcing the document.
+Reproducibility is also essential for our future selves who may need to
+revisit old research projects.
+
 \section{The Main Components of
 RMarkdown}\label{the-main-components-of-rmarkdown}
 
 Each RMarkdown document has three main components---header, text; and
 code chunks.
 
-\subsection{The YAML Header}\label{the-yaml-header}
+\subsection{The (YAML) Header}\label{the-yaml-header}
 
 The current file's header includes the following lines:
 
@@ -179,18 +200,18 @@ The current file's header includes the following lines:
 \NormalTok{author}\OperatorTok{:}\StringTok{ }\NormalTok{Abhinav Anand}
 
 \NormalTok{output}\OperatorTok{:}
-\StringTok{  }\NormalTok{pdf_document}\OperatorTok{:}
-\StringTok{    }\NormalTok{keep_tex}\OperatorTok{:}\StringTok{ }\NormalTok{true}
+\StringTok{  }\NormalTok{pdf_document}\OperatorTok{:}\StringTok{ }\CommentTok{# other options: .html, .docx etc.}
+\StringTok{    }\NormalTok{keep_tex}\OperatorTok{:}\StringTok{ }\NormalTok{true }\CommentTok{# keeps the intermediate .tex document}
 
-\NormalTok{fontsize}\OperatorTok{:}\StringTok{ }\NormalTok{11pt}
-\NormalTok{documentclass}\OperatorTok{:}\StringTok{ }\NormalTok{article}
-\NormalTok{geometry}\OperatorTok{:}\StringTok{ }\NormalTok{margin =}\StringTok{ }\FloatTok{1.}\NormalTok{5in}
+\NormalTok{fontsize}\OperatorTok{:}\StringTok{ }\NormalTok{11pt }\CommentTok{# latex parameter}
+\NormalTok{documentclass}\OperatorTok{:}\StringTok{ }\NormalTok{article }\CommentTok{# latex class}
+\NormalTok{geometry}\OperatorTok{:}\StringTok{ }\NormalTok{margin =}\StringTok{ }\FloatTok{1.}\NormalTok{5in }\CommentTok{# latex package}
 
-\NormalTok{linkcolor}\OperatorTok{:}\StringTok{ }\NormalTok{blue}
+\NormalTok{linkcolor}\OperatorTok{:}\StringTok{ }\NormalTok{blue }
 \NormalTok{urlcolor}\OperatorTok{:}\StringTok{ }\NormalTok{red}
 \NormalTok{citecolor}\OperatorTok{:}\StringTok{ }\NormalTok{magenta}
 
-\NormalTok{citation_package}\OperatorTok{:}\StringTok{ }\NormalTok{natbib}
+\NormalTok{citation_package}\OperatorTok{:}\StringTok{ }\NormalTok{natbib }\CommentTok{# latex style referencing}
 \NormalTok{bibliography}\OperatorTok{:}\StringTok{ }\NormalTok{Working_Paper.bib}
 
 \NormalTok{header}\OperatorTok{-}\NormalTok{includes}\OperatorTok{:}
@@ -203,58 +224,251 @@ The current file's header includes the following lines:
 
 \subsection{Text}\label{text}
 
-\subsection{Code Chunks}\label{code-chunks}
-
-\subsubsection{Literate Programming and
-Reproducibility}\label{literate-programming-and-reproducibility}
-
-\subsubsection{Formatting}\label{formatting}
-
 To insert a break between paragraphs, include a single completely blank
 line.
 
-To force a line break, put two blank spaces at the end of a line.
+For other text-formatting, see below:
 
-\subsubsection{Headers}\label{headers}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{*italic*}: \emph{italic}
+\item
+  \texttt{\_italic\_}: \emph{italic}
+\item
+  \texttt{**bold**}: \textbf{bold}
+\item
+  \texttt{\_\_bold\_\_}: \textbf{bold}
+\item
+  \texttt{superscript\^{}2\^{}}: superscript\textsuperscript{2}
+\item
+  \texttt{subscript\textasciitilde{}2\textasciitilde{}}:
+  subscript\textsubscript{2}
+\item
+  ``Section'' heading: \texttt{\#}
+\item
+  ``Subsection'' heading: \texttt{\#\#}
+\item
+  ``Subsubsection'' heading: \texttt{\#\#\#}
+\item
+  Math: Just use the LaTeX style
+\item
+  Link:
+  \texttt{\textless{}https://cran.r-project.org/.com\textgreater{}}:
+  \url{https://cran.r-project.org/}
+\item
+  Word link: \texttt{{[}CRAN\ project{]}(https://cran.r-project.org/)}:
+  \href{https://cran.r-project.org/}{CRAN project}
+\item
+  Simple Tables:
+\end{enumerate}
 
-\texttt{\#}, \texttt{\#\#}, \texttt{\#\#\#}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{First Column  }\OperatorTok{|}\StringTok{ }\NormalTok{Second Column}
+\OperatorTok{-------------}\StringTok{ }\ErrorTok{|}\StringTok{ }\OperatorTok{-------------}
+\ErrorTok{$}\NormalTok{c_}\DecValTok{1}\OperatorTok{$}\StringTok{  }\ErrorTok{|}\StringTok{ }\ErrorTok{$}\NormalTok{c_}\DecValTok{2}\OperatorTok{$}
+\ErrorTok{$}\NormalTok{c_}\DecValTok{3}\OperatorTok{$}\StringTok{  }\ErrorTok{|}\StringTok{ }\ErrorTok{$}\NormalTok{c_}\DecValTok{4}\OperatorTok{$}
+\end{Highlighting}
+\end{Shaded}
 
-\subsubsection{Italics, Boldface}\label{italics-boldface}
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+First Column & Second Column\tabularnewline
+\midrule
+\endhead
+\(c_1\) & \(c_2\)\tabularnewline
+\(c_3\) & \(c_4\)\tabularnewline
+\bottomrule
+\end{longtable}
 
-\subsubsection{Backticks}\label{backticks}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{12}
+\tightlist
+\item
+  Lists:
+\end{enumerate}
 
-\subsubsection{Bullet/Numbered Lists}\label{bulletnumbered-lists}
+\begin{Shaded}
+\begin{Highlighting}[]
+\OperatorTok{*}\StringTok{   }\NormalTok{Bulleted list item }\DecValTok{1}
 
-\subsubsection{Title etc.}\label{title-etc.}
+\OperatorTok{*}\StringTok{   }\NormalTok{Item }\DecValTok{2}
 
-\subsubsection{Links and Images}\label{links-and-images}
+    \OperatorTok{*}\StringTok{ }\NormalTok{Item 2a}
 
-\subsubsection{Including Code Chunks}\label{including-code-chunks}
+    \OperatorTok{*}\StringTok{ }\NormalTok{Item 2b}
 
-One of the most common options turns off printing out the code, but
-leaves the results alone: ```\{r, echo=FALSE\}
+\DecValTok{1}\NormalTok{.  Numbered list item }\DecValTok{1}
+\DecValTok{2}\NormalTok{. Item }\DecValTok{2}
+\DecValTok{3}\NormalTok{. Item }\DecValTok{3}
+\end{Highlighting}
+\end{Shaded}
 
-Another runs the code, but includes neither the text of the code nor its
-output. ```\{r, include=FALSE\} This might seem pointless, but it can be
-useful for code chunks which do set-up like loading data files, or
-initial model estimates, etc.
+\begin{itemize}
+\item
+  Bulleted list item 1
+\item
+  Item 2
 
-Another option prints the code in the document, but does not run it:
-```\{r, eval=FALSE\} This is useful if you want to talk about the
-(nicely formatted) code.
+  \begin{itemize}
+  \item
+    Item 2a
+  \item
+    Item 2b
+  \end{itemize}
+\end{itemize}
 
-\subsubsection{Tables}\label{tables}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Numbered list item 1
+\item
+  Item 2
+\item
+  Item 3
+\end{enumerate}
 
-The default print-out of matrices, tables, etc. from R Markdown is
-frankly ugly. The knitr package contains a very basic command, kable,
-which will format an array or data frame more nicely for display.
+\subsubsection{Table}\label{table}
 
-\subsubsection{Math}\label{math}
+If additional table formatting is needed, use the \texttt{knitr::kable}
+function.
 
-Just use latex style.
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\OperatorTok{::}\KeywordTok{kable}\NormalTok{(gapminder}\OperatorTok{::}\NormalTok{gapminder[}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{, ],}
+             \DataTypeTok{caption =} \StringTok{"The first 10 rows of gapminder"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llrrrr@{}}
+\caption{The first 10 rows of gapminder}\tabularnewline
+\toprule
+country & continent & year & lifeExp & pop & gdpPercap\tabularnewline
+\midrule
+\endfirsthead
+\toprule
+country & continent & year & lifeExp & pop & gdpPercap\tabularnewline
+\midrule
+\endhead
+Afghanistan & Asia & 1952 & 28.801 & 8425333 & 779.4453\tabularnewline
+Afghanistan & Asia & 1957 & 30.332 & 9240934 & 820.8530\tabularnewline
+Afghanistan & Asia & 1962 & 31.997 & 10267083 & 853.1007\tabularnewline
+Afghanistan & Asia & 1967 & 34.020 & 11537966 & 836.1971\tabularnewline
+Afghanistan & Asia & 1972 & 36.088 & 13079460 & 739.9811\tabularnewline
+Afghanistan & Asia & 1977 & 38.438 & 14880372 & 786.1134\tabularnewline
+Afghanistan & Asia & 1982 & 39.854 & 12881816 & 978.0114\tabularnewline
+Afghanistan & Asia & 1987 & 40.822 & 13867957 & 852.3959\tabularnewline
+Afghanistan & Asia & 1992 & 41.674 & 16317921 & 649.3414\tabularnewline
+Afghanistan & Asia & 1997 & 41.763 & 22227415 & 635.3414\tabularnewline
+\bottomrule
+\end{longtable}
 
 \subsubsection{Bibliography and
 Citations}\label{bibliography-and-citations}
+
+Declare in YAML header as shown above. To cite, pre-fix \texttt{@} with
+the citation key in the bibliography file.
+
+For example:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  This is the simple style of citation: \texttt{@FH:2009} yielding
+  Foster and Hart (2009)
+\item
+  For multiple citations, a semi-colon is used:
+  \texttt{@Rachev:2008;\ @Fama:1963}---Rachev, Stoyanov, and Fabozzi
+  (2008); Fama (1963)
+\item
+  For citing within parentheses, use: square brackets
+  \texttt{{[}@Bollerslev:1986{]}}, (Bollerslev 1986)
+\end{enumerate}
+
+It is common practice to end the rmarkdown file with a section header
+for the bibliography, such as \texttt{\#\ References} or
+\texttt{\#\ Bibliography} since unlike Latex, there is no automatic
+section heading for the bibliography.
+
+\subsection{Code Chunks}\label{code-chunks}
+
+All inline codes must be within backticks along with the symbol
+\texttt{r}.
+
+For more involved computation, we need to use code chunks, enclosed
+within three backticks, followed by \texttt{r} and then followed by
+three closing backticks:
+\texttt{\textasciigrave{}\textasciigrave{}\textasciigrave{}\{r\ \}}
+followed by
+\texttt{\textasciigrave{}\textasciigrave{}\textasciigrave{}}. It is
+considered good practice to include a short name following the symbol
+\texttt{r}.
+
+\subsubsection{Chunk options}\label{chunk-options}
+
+The following are the main options:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{eval\ =\ FALSE}: This will ensure no evaluation of the code
+  chunk.
+\item
+  \texttt{include\ =\ FALSE}: Run the code but show neither the code nor
+  its results.
+\item
+  \texttt{echo\ =\ FALSE}: Run the code, show the results but don't show
+  the code.
+\item
+  \texttt{message\ =\ FALSE} or \texttt{warning\ =\ FALSE}: Don't show
+  messages or warnings.
+\end{enumerate}
+
+If these choices are global---the same for all code chunks in the
+document---then we can include the options at the beginning of the
+document via:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{knitr}\OperatorTok{::}\NormalTok{opts_chunk}\OperatorTok{$}\KeywordTok{set}\NormalTok{(}\DataTypeTok{echo =}\NormalTok{ T, }
+                      \DataTypeTok{warning =}\NormalTok{ T, }
+                      \DataTypeTok{message =}\NormalTok{ F, }
+                      \DataTypeTok{eval =}\NormalTok{ T, }
+                      \DataTypeTok{include =}\NormalTok{ T}
+\NormalTok{                      )}
+\end{Highlighting}
+\end{Shaded}
+
+If we need to override global options in a code chunk, we may simply set
+that parameter manually after declaring the code chunk name: say,
+\texttt{eval\ =\ F} for one particular chunk.
+
+\section*{References}\label{references}
+\addcontentsline{toc}{section}{References}
+
+\hypertarget{refs}{}
+\hypertarget{ref-Bollerslev:1986}{}
+Bollerslev, T. 1986. ``Generalized Autoregressive Conditional
+Heteroskedasticity.'' \emph{Journal of Econometrics} 31: 307--27.
+
+\hypertarget{ref-Fama:1963}{}
+Fama, Eugene F. 1963. ``Mandelbrot and the Stable Paretian Hypothesis.''
+\emph{Journal of Business} 36: 420--29.
+
+\hypertarget{ref-FH:2009}{}
+Foster, Dean P., and Sergiu Hart. 2009. ``An Operational Measure of
+Riskiness.'' \emph{Journal of Political Economy} 117 (5): 785--814.
+
+\hypertarget{ref-Rachev:2008}{}
+Rachev, Svetlozar T., Stoyan V. Stoyanov, and Frank J. Fabozzi. 2008.
+\emph{Advanced Stochastic Models, Risk Assessment, and Portfolio
+Optimization}. Hoboken, New Jersey: John Wiley; Sons.
 
 
 \end{document}

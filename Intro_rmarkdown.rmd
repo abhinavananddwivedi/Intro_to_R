@@ -1,6 +1,7 @@
 ---
 title: "Introduction to RMarkdown"
 author: Abhinav Anand
+date: Today
 
 output:
   pdf_document:
@@ -51,11 +52,17 @@ There are many programs for rendering documents written in Markdown into documen
 
 Behind the scenes, when we "knit" the file, R Markdown sends the `.rmd` file to `knitr()` which executes all code chunks and creates a new markdown file (extension `.md`) which includes both the code and its output. This file is then used by `pandoc` (essentially a free and open source document converter) to convert to the desired format. This two-step workflow can help to create a very wide range of formatting options for eventual publishing.
 
+## Literate Programming and Reproducibility 
+
+The objective for which RMarkdown proves most useful is its potential for literate programming---a programming concept due to the famous computer scientist Donald Knuth (also the father of TeX)---in which the code and its explanation in a natural language occur in the same document. 
+
+RMarkdown provides us with a way of including both code snippets and marked up text to *build* a document that contains codes, its output as well as documentation. This also helps make research both *replicable* and *reproducible* since the `.rmd` file with the code can be sourced by readers themselves. The study can be replicated with new data using the codes in the `.rmd` file while the study can be reproduced by simply re-sourcing the document. Reproducibility is also essential for our future selves who may need to revisit old research projects.
+
 # The Main Components of RMarkdown
 
 Each RMarkdown document has three main components---header, text; and code chunks.
 
-## The YAML Header
+## The (YAML) Header
 
 The current file's header includes the following lines:
 
@@ -66,18 +73,18 @@ title: "Introduction to RMarkdown"
 author: Abhinav Anand
 
 output:
-  pdf_document:
-    keep_tex: true
+  pdf_document: # other options: .html, .docx etc.
+    keep_tex: true # keeps the intermediate .tex document
 
-fontsize: 11pt
-documentclass: article
-geometry: margin = 1.5in
+fontsize: 11pt # latex parameter
+documentclass: article # latex class
+geometry: margin = 1.5in # latex package
 
-linkcolor: blue
+linkcolor: blue 
 urlcolor: red
 citecolor: magenta
 
-citation_package: natbib
+citation_package: natbib # latex style referencing
 bibliography: Working_Paper.bib
 
 header-includes:
@@ -89,49 +96,124 @@ header-includes:
 
 ## Text
 
+To insert a break between paragraphs, include a single completely blank line.
 
+For other text-formatting, see below:
+
+1. `*italic*`: *italic* 
+2. `_italic_`: _italic_
+3. `**bold**`: **bold** 
+4. `__bold__`: __bold__
+5. `superscript^2^`: superscript^2^ 
+6. `subscript~2~`: subscript~2~
+7. "Section" heading: `#`
+8. "Subsection" heading: `##`
+9. "Subsubsection" heading: `###`
+10. Math: Just use the LaTeX style
+11. Link: `<https://cran.r-project.org/.com>`: <https://cran.r-project.org/>
+12. Word link: `[CRAN project](https://cran.r-project.org/)`: [CRAN project](https://cran.r-project.org/)
+13. Simple Tables:
+```{r table_simple, eval=F}
+
+First Column  | Second Column
+------------- | -------------
+$c_1$  | $c_2$
+$c_3$  | $c_4$
+```
+First Column  | Second Column
+------------- | -------------
+$c_1$  | $c_2$
+$c_3$  | $c_4$
+
+13. Lists:
+```{r list, eval=F}
+
+*   Bulleted list item 1
+
+*   Item 2
+
+    * Item 2a
+
+    * Item 2b
+
+1.  Numbered list item 1
+2. Item 2
+3. Item 3
+
+
+```
+
+*   Bulleted list item 1
+
+*   Item 2
+
+    * Item 2a
+
+    * Item 2b
+
+1.  Numbered list item 1
+2. Item 2
+3. Item 3
+
+
+### Table
+
+If additional table formatting is needed, use the `knitr::kable` function.
+
+```{r table_kable}
+
+knitr::kable(gapminder::gapminder[1:10, ],
+             caption = "The first 10 rows of gapminder")
+
+```
+
+### Bibliography and Citations
+
+Declare in YAML header as shown above. To cite, pre-fix `@` with the citation key in the bibliography file. 
+
+For example:
+
+1. This is the simple style of citation: `@FH:2009` yielding @FH:2009
+2. For multiple citations, a semi-colon is used: `@Rachev:2008; @Fama:1963`---@Rachev:2008; @Fama:1963
+3. For citing within parentheses, use: square brackets `[@Bollerslev:1986]`, [@Bollerslev:1986]
+
+It is common practice to end the rmarkdown file with a section header for the bibliography, such as `# References` or `# Bibliography` since unlike Latex, there is no automatic section heading for the bibliography.
 
 ## Code Chunks
 
-### Literate Programming and Reproducibility 
+All inline codes must be within backticks along with the symbol `r`.
+
+For more involved computation, we need to use code chunks, enclosed within three backticks, followed by `r` and then followed by three closing backticks: ` ```{r }` followed by ` ``` `. It is considered good practice to include a short name following the symbol `r`.
+
+### Chunk options
+
+The following are the main options:
+
+1. `eval = FALSE`: This will ensure no evaluation of the code chunk.
+2. `include = FALSE`: Run the code but show neither the code nor its results.
+3. `echo = FALSE`: Run the code, show the results but don't show the code.
+4. `message = FALSE` or `warning = FALSE`: Don't show messages or warnings.
+
+If these choices are global---the same for all code chunks in the document---then we can include the options at the beginning of the document via:
+
+```{r code_chunk_options, eval = F}
+knitr::opts_chunk$set(echo = T, 
+                      warning = T, 
+                      message = F, 
+                      eval = T, 
+                      include = T
+                      )
+
+```
+
+If we need to override global options in a code chunk, we may simply set that parameter manually after declaring the code chunk name: say, `eval = F` for one particular chunk.
+
+# References
 
 
-### Formatting
-To insert a break between paragraphs, include a single completely blank line.
-
-To force a line break, put two blank
-spaces at the end of a line.
-
-### Headers
-`#`, `##`, `###`
-
-### Italics, Boldface
 
 
-### Backticks
-
-### Bullet/Numbered Lists
-
-### Title etc.
-
-### Links and Images
 
 
-### Including Code Chunks
-
-One of the most common options turns off printing out the code, but leaves the results alone: ```{r, echo=FALSE}
-
-Another runs the code, but includes neither the text of the code nor its output. ```{r, include=FALSE} This might seem pointless, but it can be useful for code chunks which do set-up like loading data files, or initial model estimates, etc.
-
-Another option prints the code in the document, but does not run it: ```{r, eval=FALSE} This is useful if you want to talk about the (nicely formatted) code.
-
-### Tables
-
-The default print-out of matrices, tables, etc. from R Markdown is frankly ugly. The knitr package contains a very basic command, kable, which will format an array or data frame more nicely for display.
-
-### Math
-
-Just use latex style.
 
 
-### Bibliography and Citations
