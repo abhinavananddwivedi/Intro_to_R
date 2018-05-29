@@ -149,22 +149,7 @@ commands below.
   \texttt{install.packages("gapminder")} in the RStudio console.
 \end{enumerate}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(tidyverse)}
-\KeywordTok{library}\NormalTok{(rmarkdown)}
-\KeywordTok{library}\NormalTok{(knitr)}
-\KeywordTok{library}\NormalTok{(xml2)}
-\KeywordTok{library}\NormalTok{(gapminder)}
-
-\NormalTok{knitr}\OperatorTok{::}\NormalTok{opts_chunk}\OperatorTok{$}\KeywordTok{set}\NormalTok{(}\DataTypeTok{echo =}\NormalTok{ T, }
-                      \DataTypeTok{warning =}\NormalTok{ T, }
-                      \DataTypeTok{message =}\NormalTok{ F, }
-                      \DataTypeTok{eval =}\NormalTok{ T, }
-                      \DataTypeTok{include =}\NormalTok{ T}
-\NormalTok{                      )}
-\end{Highlighting}
-\end{Shaded}
+\section{Basics}\label{basics}
 
 The most basic way in which one can use R is as a calculator:
 
@@ -505,7 +490,7 @@ be extracted by the command \texttt{names()}
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.07334647 0.30922432 0.52732537 0.08402270 0.02421654 0.42104029
+## [1] 0.05153562 0.19364533 0.14827783 0.88824812 0.09306298 0.25072868
 \end{verbatim}
 
 \begin{Shaded}
@@ -531,7 +516,7 @@ Leaving an index blank includes all entries.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.07334647 0.30922432 0.52732537 0.08402270 0.02421654 0.42104029
+## [1] 0.05153562 0.19364533 0.14827783 0.88824812 0.09306298 0.25072868
 \end{verbatim}
 
 \begin{Shaded}
@@ -541,8 +526,8 @@ Leaving an index blank includes all entries.
 \end{Shaded}
 
 \begin{verbatim}
-##           a          b  c
-## 3 0.5273254 -0.5366784 13
+##           a        b  c
+## 3 0.1482778 2.105033 13
 \end{verbatim}
 
 \begin{Shaded}
@@ -564,15 +549,13 @@ Leaving an index blank includes all entries.
 \end{Shaded}
 
 \begin{verbatim}
-##            a          b  c
-## 1 0.07334647  0.2891909 11
-## 2 0.30922432 -0.1983550 12
-## 3 0.52732537 -0.5366784 13
-## 4 0.08402270 -1.8201355 14
-## 5 0.02421654 -0.6866562 15
-## 6 0.42104029 -1.1016686 16
-## 8 0.79314242 -0.1150933 18
-## 9 0.11660511  0.4335739 19
+##             a           b  c
+## 1  0.05153562 -0.01182414 11
+## 2  0.19364533 -0.01915757 12
+## 4  0.88824812 -1.90512567 14
+## 8  0.35732324 -0.72833851 18
+## 9  0.67740427 -1.53053833 19
+## 10 0.27754404 -1.83642660 20
 \end{verbatim}
 
 \textbf{Subsetting and Assignment}
@@ -586,17 +569,17 @@ Leaving an index blank includes all entries.
 \end{Shaded}
 
 \begin{verbatim}
-##             a          b  c
-## 1  0.07334647  0.2891909 11
-## 2  0.30922432 -0.1983550 12
-## 3  0.52732537 -0.5366784 13
-## 4          NA -1.8201355 14
-## 5          NA -0.6866562 15
-## 6          NA -1.1016686 16
-## 7          NA  0.8073319 17
-## 8          NA -0.1150933 18
-## 9          NA  0.4335739 19
-## 10         NA  1.5956745 20
+##             a           b  c
+## 1  0.05153562 -0.01182414 11
+## 2  0.19364533 -0.01915757 12
+## 3  0.14827783  2.10503346 13
+## 4          NA -1.90512567 14
+## 5          NA  1.40986298 15
+## 6          NA  0.79471120 16
+## 7          NA  1.23494601 17
+## 8          NA -0.72833851 18
+## 9          NA -1.53053833 19
+## 10         NA -1.83642660 20
 \end{verbatim}
 
 \section{Functions}\label{functions}
@@ -639,7 +622,7 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1] -0.7241235 -1.9404914 -0.4513705  1.3123735  1.4099941 -0.2813271
+## [1] -1.4302316 -1.4343401 -0.1246347 -0.5260969 -0.4436967 -1.9330892
 \end{verbatim}
 
 \begin{Shaded}
@@ -649,7 +632,7 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1]  0.38316849 -0.04957717  1.01885476 -2.28554036 -0.11806042 -0.28770394
+## [1] -0.5743493 -0.5070755  1.4355577  1.3126615  0.7112333  0.6778853
 \end{verbatim}
 
 \begin{Shaded}
@@ -659,7 +642,7 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1]  1.5747761 -0.7079810 -0.2185073  2.6911674 -1.4895251  0.4935895
+## [1]  0.7000870 -0.5522761  0.2965319 -0.7902541  1.9462841  0.5261410
 \end{verbatim}
 
 \section{Directory Management}\label{directory-management}
