@@ -71,7 +71,7 @@ Some other useful operations:
 
 1:10
 
-seq(1:10) #the sequence generator function
+seq(1, 10) #the sequence generator function
 
 ```
 

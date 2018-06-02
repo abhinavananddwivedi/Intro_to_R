@@ -208,7 +208,7 @@ Some other useful operations:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{) }\CommentTok{#the sequence generator function}
+\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{10}\NormalTok{) }\CommentTok{#the sequence generator function}
 \end{Highlighting}
 \end{Shaded}
 
@@ -490,7 +490,7 @@ be extracted by the command \texttt{names()}
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.05153562 0.19364533 0.14827783 0.88824812 0.09306298 0.25072868
+## [1] 0.99364575 0.58530871 0.23913986 0.20016458 0.03185024 0.49316715
 \end{verbatim}
 
 \begin{Shaded}
@@ -516,7 +516,7 @@ Leaving an index blank includes all entries.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.05153562 0.19364533 0.14827783 0.88824812 0.09306298 0.25072868
+## [1] 0.99364575 0.58530871 0.23913986 0.20016458 0.03185024 0.49316715
 \end{verbatim}
 
 \begin{Shaded}
@@ -526,8 +526,8 @@ Leaving an index blank includes all entries.
 \end{Shaded}
 
 \begin{verbatim}
-##           a        b  c
-## 3 0.1482778 2.105033 13
+##           a         b  c
+## 3 0.2391399 -2.340064 13
 \end{verbatim}
 
 \begin{Shaded}
@@ -549,13 +549,13 @@ Leaving an index blank includes all entries.
 \end{Shaded}
 
 \begin{verbatim}
-##             a           b  c
-## 1  0.05153562 -0.01182414 11
-## 2  0.19364533 -0.01915757 12
-## 4  0.88824812 -1.90512567 14
-## 8  0.35732324 -0.72833851 18
-## 9  0.67740427 -1.53053833 19
-## 10 0.27754404 -1.83642660 20
+##           a          b  c
+## 1 0.9936457  0.3373764 11
+## 3 0.2391399 -2.3400645 13
+## 6 0.4931671 -0.1437688 16
+## 7 0.7364490 -0.2054553 17
+## 8 0.9997976  0.2679153 18
+## 9 0.9083563 -1.1534578 19
 \end{verbatim}
 
 \textbf{Subsetting and Assignment}
@@ -569,17 +569,17 @@ Leaving an index blank includes all entries.
 \end{Shaded}
 
 \begin{verbatim}
-##             a           b  c
-## 1  0.05153562 -0.01182414 11
-## 2  0.19364533 -0.01915757 12
-## 3  0.14827783  2.10503346 13
-## 4          NA -1.90512567 14
-## 5          NA  1.40986298 15
-## 6          NA  0.79471120 16
-## 7          NA  1.23494601 17
-## 8          NA -0.72833851 18
-## 9          NA -1.53053833 19
-## 10         NA -1.83642660 20
+##            a          b  c
+## 1  0.9936457  0.3373764 11
+## 2  0.5853087  0.8098834 12
+## 3  0.2391399 -2.3400645 13
+## 4         NA  0.9744609 14
+## 5         NA  0.9143437 15
+## 6         NA -0.1437688 16
+## 7         NA -0.2054553 17
+## 8         NA  0.2679153 18
+## 9         NA -1.1534578 19
+## 10        NA  0.6951127 20
 \end{verbatim}
 
 \section{Functions}\label{functions}
@@ -622,7 +622,7 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1] -1.4302316 -1.4343401 -0.1246347 -0.5260969 -0.4436967 -1.9330892
+## [1]  0.5284222 -1.7805527  0.2856109 -1.7510380  1.0041921  0.4480907
 \end{verbatim}
 
 \begin{Shaded}
@@ -632,7 +632,8 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1] -0.5743493 -0.5070755  1.4355577  1.3126615  0.7112333  0.6778853
+## [1] -0.275387065  0.006691064 -1.353533404  0.610443930  0.567246330
+## [6]  1.434117648
 \end{verbatim}
 
 \begin{Shaded}
@@ -642,7 +643,7 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1]  0.7000870 -0.5522761  0.2965319 -0.7902541  1.9462841  0.5261410
+## [1]  1.3037882 -2.8912248 -0.6590982  1.4513267 -0.3646077 -1.6174427
 \end{verbatim}
 
 \section{Directory Management}\label{directory-management}
