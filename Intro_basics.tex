@@ -26,7 +26,7 @@
 \PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
 \hypersetup{unicode=true,
             pdftitle={Introduction to Basic R},
-            pdfauthor={Abhinav Anand},
+            pdfauthor={Abhinav Anand, IIMB},
             colorlinks=true,
             linkcolor=blue,
             citecolor=magenta,
@@ -120,11 +120,12 @@
   \title{Introduction to Basic R}
   \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
-  \author{Abhinav Anand}
+  \author{Abhinav Anand, IIMB}
   \preauthor{\centering\large\emph}
   \postauthor{\par}
-  \date{}
-  \predate{}\postdate{}
+  \predate{\centering\large\emph}
+  \postdate{\par}
+  \date{20180608}
 
 \linespread{1.25}
 
@@ -490,7 +491,7 @@ be extracted by the command \texttt{names()}
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.99364575 0.58530871 0.23913986 0.20016458 0.03185024 0.49316715
+## [1] 0.74196572 0.30281747 0.06004468 0.57451822 0.44430064 0.26996712
 \end{verbatim}
 
 \begin{Shaded}
@@ -516,7 +517,7 @@ Leaving an index blank includes all entries.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.99364575 0.58530871 0.23913986 0.20016458 0.03185024 0.49316715
+## [1] 0.74196572 0.30281747 0.06004468 0.57451822 0.44430064 0.26996712
 \end{verbatim}
 
 \begin{Shaded}
@@ -526,8 +527,8 @@ Leaving an index blank includes all entries.
 \end{Shaded}
 
 \begin{verbatim}
-##           a         b  c
-## 3 0.2391399 -2.340064 13
+##            a         b  c
+## 3 0.06004468 0.9132419 13
 \end{verbatim}
 
 \begin{Shaded}
@@ -549,13 +550,14 @@ Leaving an index blank includes all entries.
 \end{Shaded}
 
 \begin{verbatim}
-##           a          b  c
-## 1 0.9936457  0.3373764 11
-## 3 0.2391399 -2.3400645 13
-## 6 0.4931671 -0.1437688 16
-## 7 0.7364490 -0.2054553 17
-## 8 0.9997976  0.2679153 18
-## 9 0.9083563 -1.1534578 19
+##            a           b  c
+## 1  0.7419657 -0.57785472 11
+## 4  0.5745182  0.10134625 14
+## 5  0.4443006 -0.47851607 15
+## 6  0.2699671 -1.39343403 16
+## 7  0.4650684 -0.25129391 17
+## 9  0.4260125 -0.08455422 19
+## 10 0.4030947  0.11346659 20
 \end{verbatim}
 
 \textbf{Subsetting and Assignment}
@@ -569,17 +571,17 @@ Leaving an index blank includes all entries.
 \end{Shaded}
 
 \begin{verbatim}
-##            a          b  c
-## 1  0.9936457  0.3373764 11
-## 2  0.5853087  0.8098834 12
-## 3  0.2391399 -2.3400645 13
-## 4         NA  0.9744609 14
-## 5         NA  0.9143437 15
-## 6         NA -0.1437688 16
-## 7         NA -0.2054553 17
-## 8         NA  0.2679153 18
-## 9         NA -1.1534578 19
-## 10        NA  0.6951127 20
+##             a           b  c
+## 1  0.74196572 -0.57785472 11
+## 2  0.30281747  1.34331186 12
+## 3  0.06004468  0.91324190 13
+## 4          NA  0.10134625 14
+## 5          NA -0.47851607 15
+## 6          NA -1.39343403 16
+## 7          NA -0.25129391 17
+## 8          NA  1.54825853 18
+## 9          NA -0.08455422 19
+## 10         NA  0.11346659 20
 \end{verbatim}
 
 \section{Functions}\label{functions}
@@ -622,7 +624,7 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1]  0.5284222 -1.7805527  0.2856109 -1.7510380  1.0041921  0.4480907
+## [1]  0.35791590  0.95332253  0.08114523 -0.39967891 -1.19721267 -1.24154142
 \end{verbatim}
 
 \begin{Shaded}
@@ -632,8 +634,7 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1] -0.275387065  0.006691064 -1.353533404  0.610443930  0.567246330
-## [6]  1.434117648
+## [1] -0.45235758 -2.95961312  0.25850789  1.05431711 -0.03250901  0.35208322
 \end{verbatim}
 
 \begin{Shaded}
@@ -643,7 +644,7 @@ However, this could be automated if we write a function
 \end{Shaded}
 
 \begin{verbatim}
-## [1]  1.3037882 -2.8912248 -0.6590982  1.4513267 -0.3646077 -1.6174427
+## [1]  0.5961167  1.3560896 -0.3235954 -0.6726279 -0.8362877  0.7467438
 \end{verbatim}
 
 \section{Directory Management}\label{directory-management}
