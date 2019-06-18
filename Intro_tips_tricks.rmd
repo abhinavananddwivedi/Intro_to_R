@@ -255,3 +255,82 @@ map_int(z, length) #names are preserved
 
 # Advanced tricks: Nesting and multiple models
 
+We return to the `gapminder` dataset to look at GDP per capita around the world.
+
+```{r nest_mult_mod}
+
+gapminder %>%
+  ggplot(., aes(year, gdpPercap, group = country)) +
+  geom_line(alpha = 0.3) +
+  ylim(0, 50000)
+
+```
+
+Overall, it looks like GDP per capita has been steadily improving though some countries see some declines.
+
+## Nested data frame
+
+This is best understood by means of examples.
+
+```{r nest_mult_mod_intro}
+
+head(gapminder)
+
+# What nesting does
+nest_country <- gapminder %>%
+  dplyr::group_by(country, continent) %>%
+  tidyr::nest()
+
+nest_country
+
+# Accessing country-level data
+nest_country$data[[1]] #Afghanistan
+
+```
+
+Now we apply previously discussed ideas from functional programming to such nested dataframes. We want to check if the trend has been rising for each country. This can be achieved by applying a trend-computing function to each dataframe in the nested object.
+
+```{r nest_mult_mod_intro_2}
+
+# Trend computing function for GDP per capita
+lm_gdppc_year <- function(data_frame)
+{
+  temp <- lm(data = data_frame,
+             formula = gdpPercap ~ year) #trend
+  return((temp))
+}
+
+# Update the nested dataframe by incorporating trends
+nest_country <- nest_country %>%
+  dplyr::mutate(trend = map(data, lm_gdppc_year))
+# Equivalently: map(nest_country$data, lm_gdppc_year)
+
+nest_country$trend[[1]] #Afghanistan
+
+# We can also do the standard procedures
+nest_country %>%
+  dplyr::filter(continent == 'Asia')
+
+```
+
+### Unnesting
+
+The `unnest()` function undoes the nesting:
+
+```{r nest_mult_mod_unnest}
+
+tidyr::unnest(nest_country, data)
+
+```
+
+### Evaluating model fits
+
+The `glance()` function from the package `broom` (included in `tidyverse`) is useful
+
+```{r model_fit}
+
+nest_country %>%
+  dplyr::mutate(model_fit = map(trend, broom::glance)) %>%
+  tidyr::unnest(model_fit)
+
+```
