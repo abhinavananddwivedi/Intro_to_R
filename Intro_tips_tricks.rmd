@@ -26,11 +26,12 @@ header-includes:
 
 ```{r setup, eval=T, message=FALSE, warning=T, include=FALSE, echo=F}
 
-library(tidyverse)
+library(tidyverse); theme_set(theme_bw())
 library(rmarkdown)
 library(knitr)
 library(xml2)
 library(gapminder)
+
 
 knitr::opts_chunk$set(echo = T, 
                       warning = T, 
@@ -45,8 +46,9 @@ knitr::opts_chunk$set(echo = T,
 
 # Scripts in R
 
+Scripts are files (ending in `.R`) that contain sequences of instructions that we can command a machine to follow. Consier a typical empirical project: we need to read data stored in some type of file; then clean and tidy it, then process it and use descriptive statistics and plots to delineate its features etc. All this can be achieved by storing a sequence of instructions in a script file. Data can be read using the the `read_csv()` function, processing can be done using the package `dplyr` etc.
 
-# Linear estimation in R
+# Linear regression in R
 
 Generally a linear model takes the following form: 
 
@@ -56,7 +58,7 @@ $$
 where $u_{n\times 1}$ is the error term. This setup corresponds to an overdetermined linear system of equations leading to a least squares solution:
 
 $$
-\hat{\beta} = X^{\top} X^{-1} X^{\top}y 
+\hat{\beta} = (X^{\top} X)^{-1} X^{\top}y 
 $$
 
 where the explanatory matrix $X_{m\times n}$ contains independent variables $x_1,\hdots,x_m$ as column vectors of size $n\times 1$.
@@ -70,8 +72,7 @@ data_Ind <- gapminder::gapminder %>%
 
 ggplot(data_Ind, aes(year, gdpPercap)) +
   geom_point() +
-  geom_line() +
-  theme_bw()
+  geom_line() 
 
 ```
 
@@ -79,13 +80,9 @@ We see that there has been a large increase in GDP per capita in India. A simila
 
 ```{r data_Ind_lifeexp}
 
-data_Ind <- gapminder::gapminder %>% 
-  dplyr::filter(country == "India")
-
 ggplot(data_Ind, aes(year, lifeExp)) +
   geom_point() +
-  geom_line() +
-  theme_bw()
+  geom_line() 
 
 ```
 
@@ -94,8 +91,7 @@ What about the relationship between the two? For example, (all else equal) does 
 ```{r data_Ind_scatter}
 
 ggplot(data_Ind, aes(gdpPercap, lifeExp)) +
-  geom_point() +
-  theme_bw()
+  geom_point() 
 
 ```
 
@@ -104,3 +100,158 @@ This suggests that the two variables share a positive relation. We can try to ch
 $$
 \text{life exp} = \beta_0 + \beta_1 \text{(gdp percap)} + u
 $$
+
+In order to implement this step in R is via the following:
+
+```{r data_Ind_lm}
+
+lm_formula <- lifeExp ~ gdpPercap
+
+lm_life_gdppc <- lm(data = data_Ind, formula = lm_formula)
+
+summary(lm_life_gdppc)
+
+ggplot(data_Ind, aes(gdpPercap, lifeExp)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+
+```
+
+What is this object `lm_life_gdppc`? What is its structure? We can quickly check by accessing its contents:
+
+```{r data_Ind_lm_object}
+
+names(lm_life_gdppc)
+
+```
+
+What about some subset of data, say the period before 1990?
+
+```{r data_Ind_lm_subset}
+
+lm(filter(data_Ind, year <= 1990), formula = lm_formula) %>% 
+  summary()
+
+ggplot(filter(data_Ind, year <= 1990), aes(lifeExp, gdpPercap)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
+```
+
+
+
+## Nonlinear relationships
+
+The plot between the dependent and independent variable suggest a nonlinear relationship. Can we test this simply? Let's consider the following modification:
+
+$$
+\text{life exp} = \beta_0 + \beta_1 \text{(gdp percap)}^2 + u
+$$
+
+In general, R can accommodate independent variables involving mathematical operators in a regression equation with the function `I()`.
+
+```{r data_Ind_lm_quad}
+
+lm_formula_quad <- lifeExp ~ I(gdpPercap)^2
+
+lm_life_gdppc_quad <- lm(data = data_Ind, formula = lm_formula_quad)
+
+summary(lm_life_gdppc_quad)
+
+ggplot(data_Ind, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  stat_smooth(method = "lm", 
+              formula = y ~ poly(x, 2), #polynomial order 2
+              size = 0.8,
+              linetype = "dashed"
+              )
+
+# What about higher order polynomials?
+ggplot(data_Ind, aes(x = gdpPercap, y = lifeExp)) +
+  geom_point() +
+  stat_smooth(method = "lm", 
+              formula = y ~ poly(x, 3), #polynomial order 3
+              size = 0.8,
+              linetype = "dotdash"
+              )
+
+```
+
+Are visually better fits also evidence of better underlying models? This is a hard question to answer in general---all else equal we prefer models that are parsimonious (have fewer explanatory variables).
+
+# Functional Programming in R
+
+Another very powerful feature of R is its support for functional programming, which in general, involves applying functions to arrays, dataframes, lists etc.
+
+For example, how should one compute the mean across rows of a matrix?
+
+```{r func_prog}
+
+df <- data.frame(C_1 = rnorm(10, 0, 1), 
+                 C_2 = rnorm(10, 1, 2),
+                 C_3 = rnorm(10, 2, 3)
+                 )
+
+head(df)
+
+# One way to solve the problem
+rmean_1 <- rowMeans(df)
+print(rmean_1)
+
+# Another more 'functional' way
+func_mean <- function(vec)
+{
+  return(mean(vec, na.rm = T))
+}
+
+# Apply function on rows
+rmean_2 <- apply(df, 1, func_mean) 
+print(rmean_1)
+
+# Apply function on columns
+rmean_3 <- apply(df, 2, func_mean)
+print(rmean_3)
+
+```
+
+Note how to use the `apply()` function. We `apply()` the function over rows or columns or other dimensions. In general that's the philosophy of the `apply()` family of functions, which includes functions `lapply()` (list-apply) and `sapply()` (simplify-apply) etc. The function `lapply` returns a list and `sapply` a vector (if possible). In both cases the first argument is a list (or dataframe) and the second argument is the name of a function.
+
+What is a list? It's essentially a more general version of a dataframe and can contain not only dissimilar data types but also, say dataframes within them.
+
+```{r func_prog_apply}
+
+temp_list <- list(a = runif(10),
+                  b = "Happy birthday",
+                  c = data.frame(x = rnorm(10, 0, 1)),
+                  d = sample(letters, 7, replace = TRUE)
+                  )
+str(temp_list) #structure of the list
+
+# 1apply() is used to apply the same function to each
+# "cell" of the list
+lapply(temp_list, is.numeric) #check if each cell is numeric
+
+# contrast with sapply()
+sapply(temp_list, is.numeric)
+
+```
+
+## The `map()` family from `purrr`
+
+The `map` function does the exact same operation as `apply` but is consistent with the output format type. For example `map()` returns a list, `map_dbl()` returns a double type vector, `map_int()` returns an integer type vector etc. As with `read_csv`, the `map` family improves upon the base R code by being faster and more consistent.
+
+```{r func_prog_map}
+
+map(df, mean)
+
+map_dbl(df, median)
+
+# Also compare this
+z <- list(x = 1:3, y = 4:5)
+map_int(z, length) #names are preserved
+
+```
+
+# Advanced tricks: Nesting and multiple models
+

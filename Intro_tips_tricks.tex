@@ -126,7 +126,7 @@
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{2019/06/17}
+    \date{2019/06/18}
 
 \linespread{1.3}
 
@@ -135,7 +135,16 @@
 
 \section{Scripts in R}\label{scripts-in-r}
 
-\section{Linear estimation in R}\label{linear-estimation-in-r}
+Scripts are files (ending in \texttt{.R}) that contain sequences of
+instructions that we can command a machine to follow. Consier a typical
+empirical project: we need to read data stored in some type of file;
+then clean and tidy it, then process it and use descriptive statistics
+and plots to delineate its features etc. All this can be achieved by
+storing a sequence of instructions in a script file. Data can be read
+using the the \texttt{read\_csv()} function, processing can be done
+using the package \texttt{dplyr} etc.
+
+\section{Linear regression in R}\label{linear-regression-in-r}
 
 Generally a linear model takes the following form:
 
@@ -146,7 +155,7 @@ an overdetermined linear system of equations leading to a least squares
 solution:
 
 \[
-\hat{\beta} = X^{\top} X^{-1} X^{\top}y 
+\hat{\beta} = (X^{\top} X)^{-1} X^{\top}y 
 \]
 
 where the explanatory matrix \(X_{m\times n}\) contains independent
@@ -163,8 +172,7 @@ consider data for India in the \texttt{gapminder} dataset.
 
 \KeywordTok{ggplot}\NormalTok{(data_Ind, }\KeywordTok{aes}\NormalTok{(year, gdpPercap)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{() }
 \end{Highlighting}
 \end{Shaded}
 
@@ -175,13 +183,9 @@ A similar trend is observed for life expectancy:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{data_Ind <-}\StringTok{ }\NormalTok{gapminder}\OperatorTok{::}\NormalTok{gapminder }\OperatorTok{%>%}\StringTok{ }
-\StringTok{  }\NormalTok{dplyr}\OperatorTok{::}\KeywordTok{filter}\NormalTok{(country }\OperatorTok{==}\StringTok{ "India"}\NormalTok{)}
-
 \KeywordTok{ggplot}\NormalTok{(data_Ind, }\KeywordTok{aes}\NormalTok{(year, lifeExp)) }\OperatorTok{+}
 \StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
+\StringTok{  }\KeywordTok{geom_line}\NormalTok{() }
 \end{Highlighting}
 \end{Shaded}
 
@@ -194,8 +198,7 @@ observed?
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{ggplot}\NormalTok{(data_Ind, }\KeywordTok{aes}\NormalTok{(gdpPercap, lifeExp)) }\OperatorTok{+}
-\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
-\StringTok{  }\KeywordTok{theme_bw}\NormalTok{()}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }
 \end{Highlighting}
 \end{Shaded}
 
@@ -205,8 +208,376 @@ This suggests that the two variables share a positive relation. We can
 try to check this by means of a linear regression in the following way:
 
 \[
-\text{life exp} = \beta_0 + \beta_1 \text{gdp percap} + u
+\text{life exp} = \beta_0 + \beta_1 \text{(gdp percap)} + u
 \]
+
+In order to implement this step in R is via the following:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm_formula <-}\StringTok{ }\NormalTok{lifeExp }\OperatorTok{~}\StringTok{ }\NormalTok{gdpPercap}
+
+\NormalTok{lm_life_gdppc <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_Ind, }\DataTypeTok{formula =}\NormalTok{ lm_formula)}
+
+\KeywordTok{summary}\NormalTok{(lm_life_gdppc)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = lm_formula, data = data_Ind)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -9.155 -4.931  1.284  4.576  6.437 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 39.423336   3.659432  10.773    8e-07 ***
+## gdpPercap    0.012998   0.003075   4.227  0.00175 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 5.816 on 10 degrees of freedom
+## Multiple R-squared:  0.6411, Adjusted R-squared:  0.6052 
+## F-statistic: 17.86 on 1 and 10 DF,  p-value: 0.001753
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(data_Ind, }\KeywordTok{aes}\NormalTok{(gdpPercap, lifeExp)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method =} \StringTok{"lm"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Intro_tips_tricks_files/figure-latex/data_Ind_lm-1} \end{center}
+
+What is this object \texttt{lm\_life\_gdppc}? What is its structure? We
+can quickly check by accessing its contents:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{names}\NormalTok{(lm_life_gdppc)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "coefficients"  "residuals"     "effects"       "rank"         
+##  [5] "fitted.values" "assign"        "qr"            "df.residual"  
+##  [9] "xlevels"       "call"          "terms"         "model"
+\end{verbatim}
+
+What about some subset of data, say the period before 1990?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{lm}\NormalTok{(}\KeywordTok{filter}\NormalTok{(data_Ind, year }\OperatorTok{<=}\StringTok{ }\DecValTok{1990}\NormalTok{), }\DataTypeTok{formula =}\NormalTok{ lm_formula) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{summary}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = lm_formula, data = filter(data_Ind, year <= 1990))
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -2.8626 -1.0747 -0.1943  1.4541  2.5804 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  9.80149    3.83775   2.554   0.0433 *  
+## gdpPercap    0.05286    0.00515  10.264 4.99e-05 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.945 on 6 degrees of freedom
+## Multiple R-squared:  0.9461, Adjusted R-squared:  0.9371 
+## F-statistic: 105.3 on 1 and 6 DF,  p-value: 4.992e-05
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(}\KeywordTok{filter}\NormalTok{(data_Ind, year }\OperatorTok{<=}\StringTok{ }\DecValTok{1990}\NormalTok{), }\KeywordTok{aes}\NormalTok{(lifeExp, gdpPercap)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_smooth}\NormalTok{(}\DataTypeTok{method =} \StringTok{"lm"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Intro_tips_tricks_files/figure-latex/data_Ind_lm_subset-1} \end{center}
+
+\subsection{Nonlinear relationships}\label{nonlinear-relationships}
+
+The plot between the dependent and independent variable suggest a
+nonlinear relationship. Can we test this simply? Let's consider the
+following modification:
+
+\[
+\text{life exp} = \beta_0 + \beta_1 \text{(gdp percap)}^2 + u
+\]
+
+In general, R can accommodate independent variables involving
+mathematical operators in a regression equation with the function
+\texttt{I()}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{lm_formula_quad <-}\StringTok{ }\NormalTok{lifeExp }\OperatorTok{~}\StringTok{ }\KeywordTok{I}\NormalTok{(gdpPercap)}\OperatorTok{^}\DecValTok{2}
+
+\NormalTok{lm_life_gdppc_quad <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data_Ind, }\DataTypeTok{formula =}\NormalTok{ lm_formula_quad)}
+
+\KeywordTok{summary}\NormalTok{(lm_life_gdppc_quad)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = lm_formula_quad, data = data_Ind)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -9.155 -4.931  1.284  4.576  6.437 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)  39.423336   3.659432  10.773    8e-07 ***
+## I(gdpPercap)  0.012998   0.003075   4.227  0.00175 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 5.816 on 10 degrees of freedom
+## Multiple R-squared:  0.6411, Adjusted R-squared:  0.6052 
+## F-statistic: 17.86 on 1 and 10 DF,  p-value: 0.001753
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(data_Ind, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ gdpPercap, }\DataTypeTok{y =}\NormalTok{ lifeExp)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{stat_smooth}\NormalTok{(}\DataTypeTok{method =} \StringTok{"lm"}\NormalTok{, }
+              \DataTypeTok{formula =}\NormalTok{ y }\OperatorTok{~}\StringTok{ }\KeywordTok{poly}\NormalTok{(x, }\DecValTok{2}\NormalTok{), }\CommentTok{#polynomial order 2}
+              \DataTypeTok{size =} \FloatTok{0.8}\NormalTok{,}
+              \DataTypeTok{linetype =} \StringTok{"dashed"}
+\NormalTok{              )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Intro_tips_tricks_files/figure-latex/data_Ind_lm_quad-1} \end{center}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# What about higher order polynomials?}
+\KeywordTok{ggplot}\NormalTok{(data_Ind, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ gdpPercap, }\DataTypeTok{y =}\NormalTok{ lifeExp)) }\OperatorTok{+}
+\StringTok{  }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}
+\StringTok{  }\KeywordTok{stat_smooth}\NormalTok{(}\DataTypeTok{method =} \StringTok{"lm"}\NormalTok{, }
+              \DataTypeTok{formula =}\NormalTok{ y }\OperatorTok{~}\StringTok{ }\KeywordTok{poly}\NormalTok{(x, }\DecValTok{3}\NormalTok{), }\CommentTok{#polynomial order 3}
+              \DataTypeTok{size =} \FloatTok{0.8}\NormalTok{,}
+              \DataTypeTok{linetype =} \StringTok{"dotdash"}
+\NormalTok{              )}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics{Intro_tips_tricks_files/figure-latex/data_Ind_lm_quad-2} \end{center}
+
+Are visually better fits also evidence of better underlying models? This
+is a hard question to answer in general---all else equal we prefer
+models that are parsimonious (have fewer explanatory variables).
+
+\section{Functional Programming in R}\label{functional-programming-in-r}
+
+Another very powerful feature of R is its support for functional
+programming, which in general, involves applying functions to arrays,
+dataframes, lists etc.
+
+For example, how should one compute the mean across rows of a matrix?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{C_1 =} \KeywordTok{rnorm}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{), }
+                 \DataTypeTok{C_2 =} \KeywordTok{rnorm}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{),}
+                 \DataTypeTok{C_3 =} \KeywordTok{rnorm}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{)}
+\NormalTok{                 )}
+
+\KeywordTok{head}\NormalTok{(df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          C_1        C_2         C_3
+## 1  0.5381310  2.0581087 -0.87550785
+## 2  1.6755015  1.3252460  0.76989995
+## 3 -1.2965104  5.2609430  3.65960670
+## 4  0.4062685  0.2999016  4.13398703
+## 5  1.0145668  3.8479344 -3.90830778
+## 6 -1.0538232 -0.2574456 -0.07364864
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# One way to solve the problem}
+\NormalTok{rmean_}\DecValTok{1}\NormalTok{ <-}\StringTok{ }\KeywordTok{rowMeans}\NormalTok{(df)}
+\KeywordTok{print}\NormalTok{(rmean_}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  0.5735773  1.2568825  2.5413464  1.6133857  0.3180645 -0.4616391
+##  [7]  0.2895387  0.3109647  1.6144940  0.8859763
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Another more 'functional' way}
+\NormalTok{func_mean <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(vec)}
+\NormalTok{\{}
+  \KeywordTok{return}\NormalTok{(}\KeywordTok{mean}\NormalTok{(vec, }\DataTypeTok{na.rm =}\NormalTok{ T))}
+\NormalTok{\}}
+
+\CommentTok{# Apply function on rows}
+\NormalTok{rmean_}\DecValTok{2}\NormalTok{ <-}\StringTok{ }\KeywordTok{apply}\NormalTok{(df, }\DecValTok{1}\NormalTok{, func_mean) }
+\KeywordTok{print}\NormalTok{(rmean_}\DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  0.5735773  1.2568825  2.5413464  1.6133857  0.3180645 -0.4616391
+##  [7]  0.2895387  0.3109647  1.6144940  0.8859763
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Apply function on columns}
+\NormalTok{rmean_}\DecValTok{3}\NormalTok{ <-}\StringTok{ }\KeywordTok{apply}\NormalTok{(df, }\DecValTok{2}\NormalTok{, func_mean)}
+\KeywordTok{print}\NormalTok{(rmean_}\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          C_1          C_2          C_3 
+## -0.002382187  1.569520037  1.115639449
+\end{verbatim}
+
+Note how to use the \texttt{apply()} function. We \texttt{apply()} the
+function over rows or columns or other dimensions. In general that's the
+philosophy of the \texttt{apply()} family of functions, which includes
+functions \texttt{lapply()} (list-apply) and \texttt{sapply()}
+(simplify-apply) etc. The function \texttt{lapply} returns a list and
+\texttt{sapply} a vector (if possible). In both cases the first argument
+is a list (or dataframe) and the second argument is the name of a
+function.
+
+What is a list? It's essentially a more general version of a dataframe
+and can contain not only dissimilar data types but also, say dataframes
+within them.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{temp_list <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{a =} \KeywordTok{runif}\NormalTok{(}\DecValTok{10}\NormalTok{),}
+                  \DataTypeTok{b =} \StringTok{"Happy birthday"}\NormalTok{,}
+                  \DataTypeTok{c =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x =} \KeywordTok{rnorm}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{)),}
+                  \DataTypeTok{d =} \KeywordTok{sample}\NormalTok{(letters, }\DecValTok{7}\NormalTok{, }\DataTypeTok{replace =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{                  )}
+\KeywordTok{str}\NormalTok{(temp_list) }\CommentTok{#structure of the list}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## List of 4
+##  $ a: num [1:10] 0.704 0.597 0.584 0.173 0.474 ...
+##  $ b: chr "Happy birthday"
+##  $ c:'data.frame':   10 obs. of  1 variable:
+##   ..$ x: num [1:10] 0.347 -2.513 -0.394 0.044 -1.187 ...
+##  $ d: chr [1:7] "e" "u" "z" "j" ...
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# 1apply() is used to apply the same function to each}
+\CommentTok{# "cell" of the list}
+\KeywordTok{lapply}\NormalTok{(temp_list, is.numeric) }\CommentTok{#check if each cell is numeric}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $a
+## [1] TRUE
+## 
+## $b
+## [1] FALSE
+## 
+## $c
+## [1] FALSE
+## 
+## $d
+## [1] FALSE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# contrast with sapply()}
+\KeywordTok{sapply}\NormalTok{(temp_list, is.numeric)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     a     b     c     d 
+##  TRUE FALSE FALSE FALSE
+\end{verbatim}
+
+\subsection{\texorpdfstring{The \texttt{map()} family from
+\texttt{purrr}}{The map() family from purrr}}\label{the-map-family-from-purrr}
+
+The \texttt{map} function does the exact same operation as
+\texttt{apply} but is consistent with the output format type. For
+example \texttt{map()} returns a list, \texttt{map\_dbl()} returns a
+double type vector, \texttt{map\_int()} returns an integer type vector
+etc. As with \texttt{read\_csv}, the \texttt{map} family improves upon
+the base R code by being faster and more consistent.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{map}\NormalTok{(df, mean)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $C_1
+## [1] -0.002382187
+## 
+## $C_2
+## [1] 1.56952
+## 
+## $C_3
+## [1] 1.115639
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{map_dbl}\NormalTok{(df, median)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       C_1       C_2       C_3 
+## 0.4158354 0.8125738 1.1505824
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Also compare this}
+\NormalTok{z <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{x =} \DecValTok{1}\OperatorTok{:}\DecValTok{3}\NormalTok{, }\DataTypeTok{y =} \DecValTok{4}\OperatorTok{:}\DecValTok{5}\NormalTok{)}
+\KeywordTok{map_int}\NormalTok{(z, length) }\CommentTok{#names are preserved}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## x y 
+## 3 2
+\end{verbatim}
 
 
 \end{document}
