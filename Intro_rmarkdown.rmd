@@ -44,6 +44,7 @@ knitr::opts_chunk$set(echo = T,
 
 The packages `rmarkdown` and `knitr` need to be installed prior to running the commands below. To install, type in the console `install.packages(c("knitr", "rmarkdown"))`.
 
+
 # Background
 
 A text processor such as MS Word uses a "What-You-See-Is-What-You-Get" (WYSIWYG) editor. We see the output of the "rendered" text directly. However, to exercise finer control over the rendering, a "markup" language is better. Latex and HTML are examples of markup languages: they contain ordinary text, as well as special commands that govern the final rendering of the text. Markdown is an especially convenient markup language that preserves the finer aspects of text formatting without being too hard to read.

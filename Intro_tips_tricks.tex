@@ -407,13 +407,13 @@ For example, how should one compute the mean across rows of a matrix?
 \end{Shaded}
 
 \begin{verbatim}
-##           C_1         C_2        C_3
-## 1 -0.09280755  3.16525877 -0.1326818
-## 2 -1.72400687  0.70561317  9.2879545
-## 3 -0.87588162  0.09011416  6.6904262
-## 4 -0.49597151 -0.15796488 -1.1483896
-## 5 -1.76524218 -0.13320632  2.1716311
-## 6 -1.01364069 -0.53340528  2.0441538
+##          C_1        C_2        C_3
+## 1  0.3644709  1.3382598 -1.2066315
+## 2  0.8944397  1.6764120  3.2312982
+## 3  1.9975643 -0.7821961 -1.7439697
+## 4  1.3048047 -0.9154783  2.3508948
+## 5 -1.0823374 -1.6868917 -0.8635651
+## 6  1.3252254 -1.0091568  3.7084433
 \end{verbatim}
 
 \begin{Shaded}
@@ -425,8 +425,8 @@ For example, how should one compute the mean across rows of a matrix?
 \end{Shaded}
 
 \begin{verbatim}
-##  [1]  0.97992314  2.75652025  1.96821958 -0.60077534  0.09106087
-##  [6]  0.16570260  1.17545975 -1.24629421  1.78506284  0.58475120
+##  [1]  0.16536640  1.93404996 -0.17620049  0.91340708 -1.21093139
+##  [6]  1.34150398  1.40577541  1.88427922  0.22121314  0.06221691
 \end{verbatim}
 
 \begin{Shaded}
@@ -444,8 +444,8 @@ For example, how should one compute the mean across rows of a matrix?
 \end{Shaded}
 
 \begin{verbatim}
-##  [1]  0.97992314  2.75652025  1.96821958 -0.60077534  0.09106087
-##  [6]  0.16570260  1.17545975 -1.24629421  1.78506284  0.58475120
+##  [1]  0.16536640  1.93404996 -0.17620049  0.91340708 -1.21093139
+##  [6]  1.34150398  1.40577541  1.88427922  0.22121314  0.06221691
 \end{verbatim}
 
 \begin{Shaded}
@@ -457,8 +457,8 @@ For example, how should one compute the mean across rows of a matrix?
 \end{Shaded}
 
 \begin{verbatim}
-##        C_1        C_2        C_3 
-## -0.1797416  0.7129948  1.7646360
+##         C_1         C_2         C_3 
+##  0.54442698 -0.04173822  1.45951531
 \end{verbatim}
 
 Note how to use the \texttt{apply()} function. We \texttt{apply()} the
@@ -487,11 +487,11 @@ within them.
 
 \begin{verbatim}
 ## List of 4
-##  $ a: num [1:10] 0.492 0.989 0.412 0.559 0.126 ...
+##  $ a: num [1:10] 0.231 0.126 0.15 0.774 0.69 ...
 ##  $ b: chr "Happy birthday"
 ##  $ c:'data.frame':   10 obs. of  1 variable:
-##   ..$ x: num [1:10] 2.559 1.171 0.301 -0.915 -1 ...
-##  $ d: chr [1:7] "p" "t" "o" "n" ...
+##   ..$ x: num [1:10] 0.116 -1.248 -1.682 -0.577 1.055 ...
+##  $ d: chr [1:7] "u" "l" "c" "s" ...
 \end{verbatim}
 
 \begin{Shaded}
@@ -546,13 +546,13 @@ the base R code by being faster and more consistent.
 
 \begin{verbatim}
 ## $C_1
-## [1] -0.1797416
+## [1] 0.544427
 ## 
 ## $C_2
-## [1] 0.7129948
+## [1] -0.04173822
 ## 
 ## $C_3
-## [1] 1.764636
+## [1] 1.459515
 \end{verbatim}
 
 \begin{Shaded}
@@ -563,7 +563,7 @@ the base R code by being faster and more consistent.
 
 \begin{verbatim}
 ##        C_1        C_2        C_3 
-## -0.3491823  0.2237667  1.9502553
+##  0.6673511 -0.4732725  1.2362129
 \end{verbatim}
 
 \begin{Shaded}

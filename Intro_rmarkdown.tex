@@ -111,22 +111,23 @@
 \usepackage{titling}
 
 % Create subtitle command for use in maketitle
-\newcommand{\subtitle}[1]{
+\providecommand{\subtitle}[1]{
   \posttitle{
     \begin{center}\large#1\end{center}
     }
 }
 
 \setlength{\droptitle}{-2em}
+
   \title{Introduction to RMarkdown}
-  \pretitle{\vspace{\droptitle}\centering\huge}
+    \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
-  \author{Abhinav Anand, IIMB}
-  \preauthor{\centering\large\emph}
+    \author{Abhinav Anand, IIMB}
+    \preauthor{\centering\large\emph}
   \postauthor{\par}
-  \predate{\centering\large\emph}
+      \predate{\centering\large\emph}
   \postdate{\par}
-  \date{2018/06/08}
+    \date{2019/06/18}
 
 \linespread{1.25}
 
