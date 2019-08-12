@@ -23,6 +23,8 @@ header-includes:
 
 
 ---
+<!-- TO DO LIST -->
+<!-- INCLUDE usage of the summary() function -->
 
 # Setup
 
