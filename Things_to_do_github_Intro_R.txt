@@ -1,0 +1,44 @@
+Things to do:
+
+1. Use `list.files` and `sapply` and `rbind` to read multiple files in other directories
+
+Example:
+
+files <- list.files(path = "Data", pattern = "*.csv", full.names = T)
+
+data<- sapply(files, read_csv, simplify=FALSE) %>% 
+       bind_rows(.id = "id")
+       
+2. Usage of tidyr::separate() 
+
+Example:
+
+data_new= data %>% separate(`Sampling Date`, c("D", "M", "Y"),
+                            sep="([\\/\\-])")
+data_new=cbind(data_new,data$`Sampling Date`)
+
+3. Install libraries that are missing
+
+Example:
+
+# INSTALL MISSING PACKAGES and Load all libraries
+
+list.of.packages <- c("tidyverse","ggthemes","forecast","tseries",	
+                      "gridExtra","rugarch","gganimate","plotly",
+                      "ggplot2","broom","magrittr","Quandl",	
+                      "ggplot2","tidyverse","dplyr",	
+                      "gganimate","gifski","png","cvar")
+
+new.packages <- list.of.packages[!(list.of.packages %in% 
+                                     installed.packages()[,"Package"])]
+
+if(length(new.packages)) install.packages(new.packages)
+
+lapply(list.of.packages, require, character.only = TRUE)
+
+4. Arranging ggplots in a grid of m\times n
+
+Example:
+
+4.1 grid.arrange(p1,p2,p3,p4,p5,p6, ncol=2)
+4.2 grid.arrange(p1 , p2 , ncol = 2)
