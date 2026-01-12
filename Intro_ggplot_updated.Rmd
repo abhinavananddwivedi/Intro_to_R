@@ -1,0 +1,529 @@
+---
+title: "Introduction to ggplot2 with Penn World Tables"
+author: "Updated Tutorial"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    theme: united
+    code_folding: show
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, 
+                      fig.width = 10, fig.height = 6)
+```
+
+# Introduction
+
+This tutorial provides an introduction to data visualization using `ggplot2` with the Penn World Tables (PWT) dataset. The Penn World Tables provide internationally comparable data on GDP, employment, capital stocks, and productivity across countries and time.
+
+# Setup
+
+## Loading Required Packages
+
+```{r load_packages}
+# Install packages if not already installed
+required_packages <- c("tidyverse", "pwt10", "scales", "ggthemes", 
+                      "patchwork", "viridis")
+
+library(tidyverse)
+library(pwt10)
+library(scales)
+library(ggthemes)
+library(patchwork)
+library(viridis)
+
+# library(c("tidyverse", "pwt10", "scales", "ggthemes", 
+#                       "patchwork", "viridis"))
+
+# for (pkg in required_packages) {
+#   if (!require(pkg, character.only = TRUE)) {
+#     install.packages(pkg, dependencies = TRUE)
+#     library(pkg, character.only = TRUE)
+#   }
+# }
+
+# install.packages(required_packages)
+```
+
+## Loading the Penn World Tables Data
+
+```{r load_data}
+# Load Penn World Tables 10.01
+#data("pwt11.0.xlsx")
+
+pwt110 <- readr::read_csv('pwt110.csv')
+
+# Rename for convenience
+pwt <- pwt110
+
+# Display structure
+glimpse(pwt)
+
+# Summary of key variables
+summary(pwt %>% select(year, country, rgdpe, rgdpo, pop, emp, avh, hc))
+```
+
+## Understanding the Key Variables
+
+- `country`: Country name
+- `isocode`: 3-letter ISO country code
+- `year`: Year
+- `rgdpe`: Expenditure-side real GDP at chained PPPs (in mil. 2017 US$)
+- `rgdpo`: Output-side real GDP at chained PPPs (in mil. 2017 US$)
+- `pop`: Population (in millions)
+- `emp`: Number of persons engaged (in millions)
+- `avh`: Average annual hours worked by persons engaged
+- `hc`: Human capital index
+- `csh_i`: Share of gross capital formation at current PPPs
+- `csh_c`: Share of household consumption at current PPPs
+
+# Data Preparation
+
+```{r data_prep}
+# Create GDP per capita variables
+pwt <- pwt %>%
+  mutate(
+    gdppc_exp = rgdpe / pop,  # GDP per capita (expenditure)
+    gdppc_out = rgdpo / pop,  # GDP per capita (output)
+    log_gdppc = log(gdppc_exp),
+    productivity = rgdpe / emp  # Labor productivity
+  )
+
+# Select key countries for visualization
+selected_countries <- c("United States of America", "China", "India", 
+                       "Germany", "Japan", "United Kingdom", 
+                       "Brazil", "South Korea", "France", "Italy")
+
+pwt_selected <- pwt %>%
+  filter(country %in% selected_countries)
+
+# Create regional groupings
+asia <- c("China", "India", "Japan", "South Korea", "Indonesia", 
+          "Thailand", "Vietnam", "Malaysia")
+europe <- c("Germany", "United Kingdom", "France", "Italy", "Spain", 
+           "Poland", "Netherlands")
+americas <- c("United States of America", "Brazil", "Mexico", "Canada", 
+             "Argentina", "Colombia")
+
+pwt <- pwt %>%
+  mutate(
+    region = case_when(
+      country %in% asia ~ "Asia",
+      country %in% europe ~ "Europe",
+      country %in% americas ~ "Americas",
+      TRUE ~ "Other"
+    )
+  )
+```
+
+# Basic ggplot2 Visualizations
+
+## 1. Simple Line Plot: GDP Per Capita Over Time
+
+```{r gdp_line_basic}
+# Basic line plot for USA
+pwt %>%
+  filter(country == "United States") %>%
+  ggplot(aes(x = year, y = gdppc_exp)) +
+  geom_line() +
+  labs(
+    title = "GDP per Capita: United States",
+    x = "Year",
+    y = "GDP per Capita (2017 USD, PPP)"
+  )
+```
+
+## 2. Multiple Countries Line Plot
+
+```{r gdp_line_multiple}
+pwt_selected %>%
+  ggplot(aes(x = year, y = gdppc_exp, color = country)) +
+  geom_line(linewidth = 1) +
+  scale_y_continuous(labels = comma) +
+  scale_color_viridis_d() +
+  labs(
+    title = "GDP per Capita Over Time: Selected Countries",
+    subtitle = "Real GDP per capita at chained PPPs (2017 USD)",
+    x = "Year",
+    y = "GDP per Capita",
+    color = "Country"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+## 3. Log Scale for Better Comparison
+
+```{r gdp_line_log}
+pwt_selected %>%
+  ggplot(aes(x = year, y = gdppc_exp, color = country)) +
+  geom_line(linewidth = 1) +
+  scale_y_log10(labels = comma) +
+  scale_color_viridis_d() +
+  labs(
+    title = "GDP per Capita Over Time (Log Scale)",
+    subtitle = "Log scale reveals growth rates more clearly",
+    x = "Year",
+    y = "GDP per Capita (log scale)",
+    color = "Country"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+# Economic Growth Analysis
+
+## 4. Growth Rates
+
+```{r growth_rates}
+# Calculate growth rates
+pwt_growth <- pwt_selected %>%
+  group_by(country) %>%
+  arrange(year) %>%
+  mutate(
+    growth_rate = (gdppc_exp / lag(gdppc_exp) - 1) * 100
+  ) %>%
+  ungroup()
+
+# Plot growth rates
+pwt_growth %>%
+  filter(!is.na(growth_rate)) %>%
+  ggplot(aes(x = year, y = growth_rate, color = country)) +
+  geom_line(alpha = 0.7) +
+  geom_hline(yintercept = 0, linetype = "dashed", color = "black") +
+  scale_color_viridis_d() +
+  labs(
+    title = "Annual GDP per Capita Growth Rates",
+    subtitle = "Percentage change from previous year",
+    x = "Year",
+    y = "Growth Rate (%)",
+    color = "Country"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+## 5. Box Plot: Growth Rate Distribution by Country
+
+```{r growth_boxplot}
+pwt_growth %>%
+  filter(!is.na(growth_rate), year >= 1970) %>%
+  ggplot(aes(x = reorder(country, growth_rate, median), y = growth_rate, 
+             fill = country)) +
+  geom_boxplot(show.legend = FALSE) +
+  scale_fill_viridis_d() +
+  coord_flip() +
+  labs(
+    title = "Distribution of GDP Growth Rates (1970-2019)",
+    subtitle = "Countries ordered by median growth rate",
+    x = "Country",
+    y = "Annual Growth Rate (%)"
+  ) +
+  theme_minimal()
+```
+
+# Convergence Analysis
+
+## 6. Scatter Plot: Initial Income vs. Growth (Beta Convergence)
+
+```{r beta_convergence}
+# Calculate average growth rates
+convergence_data <- pwt %>%
+  filter(year %in% c(1970, 2019), !is.na(gdppc_exp)) %>%
+  select(country, year, gdppc_exp, region) %>%
+  pivot_wider(names_from = year, values_from = gdppc_exp, 
+              names_prefix = "gdp_") %>%
+  filter(!is.na(gdp_1970), !is.na(gdp_2019)) %>%
+  mutate(
+    avg_growth = ((gdp_2019 / gdp_1970)^(1/49) - 1) * 100,
+    log_initial_gdp = log(gdp_1970)
+  )
+
+# Scatter plot with regression line
+convergence_data %>%
+  ggplot(aes(x = log_initial_gdp, y = avg_growth, color = region)) +
+  geom_point(size = 3, alpha = 0.6) +
+  geom_smooth(method = "lm", se = TRUE, color = "black", linetype = "dashed") +
+  scale_color_viridis_d() +
+  labs(
+    title = "Convergence Analysis: 1970-2019",
+    subtitle = "Relationship between initial income and subsequent growth",
+    x = "Log GDP per Capita in 1970",
+    y = "Average Annual Growth Rate 1970-2019 (%)",
+    color = "Region"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+## 7. Scatter with Country Labels
+
+```{r convergence_labeled}
+# Highlight specific countries
+highlight_countries <- c("China", "India", "South Korea", 
+                        "United States of America", "Japan")
+
+convergence_data %>%
+  mutate(label = ifelse(country %in% highlight_countries, country, "")) %>%
+  ggplot(aes(x = log_initial_gdp, y = avg_growth, color = region)) +
+  geom_point(size = 3, alpha = 0.6) +
+  ggrepel::geom_text_repel(aes(label = label), 
+                          size = 3, max.overlaps = 10) +
+  geom_smooth(method = "lm", se = TRUE, color = "black", linetype = "dashed") +
+  scale_color_viridis_d() +
+  labs(
+    title = "Convergence Analysis with Country Labels",
+    x = "Log GDP per Capita in 1970",
+    y = "Average Annual Growth Rate 1970-2019 (%)",
+    color = "Region"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+# Cross-Sectional Comparisons
+
+## 8. Bar Plot: GDP per Capita in 2019
+
+```{r gdp_bar_2019}
+pwt %>%
+  filter(year == 2019, country %in% selected_countries) %>%
+  ggplot(aes(x = reorder(country, gdppc_exp), y = gdppc_exp, fill = country)) +
+  geom_col(show.legend = FALSE) +
+  scale_y_continuous(labels = comma) +
+  scale_fill_viridis_d() +
+  coord_flip() +
+  labs(
+    title = "GDP per Capita in 2019",
+    subtitle = "Selected Countries",
+    x = "Country",
+    y = "GDP per Capita (2017 USD, PPP)"
+  ) +
+  theme_minimal()
+```
+
+## 9. Faceted Line Plots
+
+```{r gdp_faceted}
+pwt_selected %>%
+  ggplot(aes(x = year, y = gdppc_exp)) +
+  geom_line(color = "steelblue", linewidth = 1) +
+  facet_wrap(~ country, scales = "free_y", ncol = 3) +
+  scale_y_continuous(labels = comma) +
+  labs(
+    title = "GDP per Capita Trends by Country",
+    x = "Year",
+    y = "GDP per Capita"
+  ) +
+  theme_minimal() +
+  theme(strip.background = element_rect(fill = "lightgray"))
+```
+
+# Advanced Visualizations
+
+## 10. Density Plot: Distribution of GDP per Capita
+
+```{r density_plot}
+pwt %>%
+  filter(year %in% c(1970, 1990, 2010, 2019), !is.na(gdppc_exp)) %>%
+  ggplot(aes(x = gdppc_exp, fill = factor(year))) +
+  geom_density(alpha = 0.5) +
+  scale_x_log10(labels = comma) +
+  scale_fill_viridis_d() +
+  labs(
+    title = "Global Distribution of GDP per Capita Over Time",
+    subtitle = "Evolution of income distribution across countries",
+    x = "GDP per Capita (log scale)",
+    y = "Density",
+    fill = "Year"
+  ) +
+  theme_minimal()
+```
+
+## 11. Heat Map: GDP Growth by Region and Decade
+
+```{r heatmap}
+pwt %>%
+  filter(!is.na(gdppc_exp), region != "Other") %>%
+  mutate(decade = floor(year / 10) * 10) %>%
+  group_by(region, decade) %>%
+  summarize(
+    avg_growth = mean((gdppc_exp / lag(gdppc_exp) - 1) * 100, na.rm = TRUE),
+    .groups = "drop"
+  ) %>%
+  filter(!is.na(avg_growth)) %>%
+  ggplot(aes(x = factor(decade), y = region, fill = avg_growth)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient2(low = "red", mid = "white", high = "darkgreen", 
+                      midpoint = 2) +
+  labs(
+    title = "Average GDP Growth by Region and Decade",
+    x = "Decade",
+    y = "Region",
+    fill = "Growth Rate (%)"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## 12. Bubble Chart: Population, GDP, and Investment
+
+```{r bubble_chart}
+pwt %>%
+  filter(year == 2019, !is.na(gdppc_exp), !is.na(pop), !is.na(csh_i)) %>%
+  filter(region != "Other") %>%
+  ggplot(aes(x = gdppc_exp, y = csh_i, size = pop, color = region)) +
+  geom_point(alpha = 0.6) +
+  scale_x_log10(labels = comma) +
+  scale_size(range = c(2, 20)) +
+  scale_color_viridis_d() +
+  labs(
+    title = "GDP per Capita, Investment Share, and Population (2019)",
+    subtitle = "Bubble size represents population",
+    x = "GDP per Capita (log scale)",
+    y = "Investment Share of GDP (%)",
+    size = "Population\n(millions)",
+    color = "Region"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "right")
+```
+
+# Customization and Themes
+
+## 13. Custom Theme Example
+
+```{r custom_theme}
+# Create a custom theme
+my_theme <- function() {
+  theme_minimal() +
+    theme(
+      plot.title = element_text(face = "bold", size = 14),
+      plot.subtitle = element_text(size = 11, color = "gray40"),
+      axis.title = element_text(size = 11),
+      legend.position = "bottom",
+      panel.grid.minor = element_blank()
+    )
+}
+
+# Apply custom theme
+pwt_selected %>%
+  filter(year >= 2000) %>%
+  ggplot(aes(x = year, y = gdppc_exp, color = country)) +
+  geom_line(linewidth = 1.2) +
+  scale_y_continuous(labels = comma) +
+  scale_color_brewer(palette = "Set2") +
+  labs(
+    title = "GDP per Capita in the 21st Century",
+    subtitle = "Selected major economies",
+    x = "Year",
+    y = "GDP per Capita (2017 USD, PPP)",
+    color = "Country"
+  ) +
+  my_theme()
+```
+
+## 14. Combining Multiple Plots with Patchwork
+
+```{r patchwork_example}
+# Create individual plots
+p1 <- pwt_selected %>%
+  filter(year == 2019) %>%
+  ggplot(aes(x = reorder(country, gdppc_exp), y = gdppc_exp)) +
+  geom_col(fill = "steelblue") +
+  coord_flip() +
+  scale_y_continuous(labels = comma) +
+  labs(title = "GDP per Capita (2019)", x = NULL, y = "GDP per Capita") +
+  theme_minimal()
+
+p2 <- pwt_selected %>%
+  filter(year == 2019) %>%
+  ggplot(aes(x = reorder(country, pop), y = pop)) +
+  geom_col(fill = "coral") +
+  coord_flip() +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Population (2019)", x = NULL, y = "Population (millions)") +
+  theme_minimal()
+
+p3 <- pwt_selected %>%
+  filter(year >= 1990) %>%
+  ggplot(aes(x = year, y = gdppc_exp, color = country)) +
+  geom_line(show.legend = FALSE) +
+  scale_y_log10(labels = comma) +
+  scale_color_viridis_d() +
+  labs(title = "GDP Trends (1990-2019)", x = "Year", y = "GDP per Capita (log)") +
+  theme_minimal()
+
+# Combine plots
+(p1 | p2) / p3 +
+  plot_annotation(
+    title = "Economic Indicators: Selected Countries",
+    theme = theme(plot.title = element_text(size = 16, face = "bold"))
+  )
+```
+
+# Saving Your Plots
+
+```{r save_plots, eval=FALSE}
+# Save the last plot
+ggsave("gdp_analysis.png", width = 10, height = 6, dpi = 300)
+
+# Save a specific plot
+p <- pwt_selected %>%
+  ggplot(aes(x = year, y = gdppc_exp, color = country)) +
+  geom_line(linewidth = 1) +
+  scale_y_continuous(labels = comma) +
+  scale_color_viridis_d() +
+  labs(
+    title = "GDP per Capita Over Time",
+    x = "Year",
+    y = "GDP per Capita"
+  ) +
+  theme_minimal()
+
+ggsave("my_plot.pdf", plot = p, width = 12, height = 7)
+```
+
+# Summary and Key Takeaways
+
+## Key ggplot2 Concepts
+
+1. **Grammar of Graphics**: Every ggplot has three key components:
+   - Data
+   - Aesthetic mappings (aes)
+   - Geometric objects (geoms)
+
+2. **Layer by Layer**: Build plots incrementally using `+`
+
+3. **Aesthetics**: Map data to visual properties (x, y, color, size, etc.)
+
+4. **Geoms**: Choose the right geometric object:
+   - `geom_line()` for time series
+   - `geom_point()` for scatter plots
+   - `geom_col()` for bar charts
+   - `geom_boxplot()` for distributions
+   - `geom_density()` for continuous distributions
+
+5. **Faceting**: Create small multiples with `facet_wrap()` or `facet_grid()`
+
+6. **Scales**: Control how data maps to aesthetics with `scale_*` functions
+
+7. **Themes**: Customize the non-data elements of your plot
+
+## Further Resources
+
+- [ggplot2 Documentation](https://ggplot2.tidyverse.org/)
+- [R Graphics Cookbook](https://r-graphics.org/)
+- [Data Visualization: A Practical Introduction](https://socviz.co/)
+- [Penn World Tables Documentation](https://www.rug.nl/ggdc/productivity/pwt/)
+
+---
+
+# Session Information
+
+```{r session_info}
+sessionInfo()
+```
